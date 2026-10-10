@@ -6,6 +6,8 @@ import DashboardScreen from './screens/DashboardScreen';
 import AttendanceScreen from './screens/AttendanceScreen';
 import SubscribersScreen from './screens/SubscribersScreen';
 import EquipmentScreen from './screens/EquipmentScreen';
+import ContactsScreen from './screens/ContactsScreen';
+import LockerKeysScreen from './screens/LockerKeysScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
@@ -16,6 +18,8 @@ const ICONS: Record<string, IconName> = {
     Attendance: 'calendar-check',
     Subscribers: 'account-group',
     Equipment: 'dumbbell',
+    Contacts: 'card-account-phone-outline',
+    LockerKeys: 'key-variant',
     Profile: 'account',
     Settings: 'cog',
 };
@@ -36,6 +40,8 @@ export default function BottomTabs() {
             <Tab.Screen name="Attendance" component={AttendanceScreen} />
             <Tab.Screen name="Subscribers" component={SubscribersScreen} />
             <Tab.Screen name="Equipment" component={EquipmentScreen} />
+            <Tab.Screen name="Contacts" component={ContactsScreen} />
+            <Tab.Screen name="LockerKeys" component={LockerKeysScreen} options={{ title: 'Locker Keys' }} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
             <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator>

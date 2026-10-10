@@ -1,5 +1,9 @@
+import type { Contact, NewContact } from '../models/Contact';
 import type { Equipment, NewEquipment } from '../models/Equipment';
+import type { LockerKey, NewLockerKey } from '../models/LockerKey';
 import type { Member, NewMember } from '../models/Member';
+import { mirroredContactRepository } from './MirroredContactRepository';
+import { mirroredLockerKeyRepository } from './MirroredLockerKeyRepository';
 import { mirroredMemberRepository } from './MirroredMemberRepository';
 import type { Repository } from './Repository';
 import { sqliteEquipmentRepository } from './SqliteEquipmentRepository';
@@ -11,3 +15,7 @@ export const memberRepository: Repository<Member, NewMember> = mirroredMemberRep
 
 // Equipment is local-only (no Firestore backup) for now.
 export const equipmentRepository: Repository<Equipment, NewEquipment> = sqliteEquipmentRepository;
+
+// Contacts and locker keys are mirrored to Firestore for a cloud backup, same as members.
+export const contactRepository: Repository<Contact, NewContact> = mirroredContactRepository;
+export const lockerKeyRepository: Repository<LockerKey, NewLockerKey> = mirroredLockerKeyRepository;

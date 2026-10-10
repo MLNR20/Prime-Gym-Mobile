@@ -16,6 +16,12 @@ export default function DashboardScreen() {
         if (key === 'equipment') {
             navigation.navigate('Equipment' as never);
         }
+        if (key === 'contacts') {
+            navigation.navigate('Contacts' as never);
+        }
+        if (key === 'lockers') {
+            navigation.navigate('LockerKeys' as never);
+        }
     };
 
     return (
