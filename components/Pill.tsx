@@ -1,20 +1,24 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-type PillVariant = 'success' | 'danger';
+type PillVariant = 'success' | 'warning' | 'danger';
 
 type PillProps = {
     label: string;
     variant: PillVariant;
 };
 
+const VARIANT_COLORS: Record<PillVariant, { background: string; text: string }> = {
+    success: { background: '#DCFCE7', text: '#15803D' },
+    warning: { background: '#FEF3C7', text: '#B45309' },
+    danger: { background: '#FEE2E2', text: '#B91C1C' },
+};
+
 export default function Pill({ label, variant }: PillProps) {
+    const colors = VARIANT_COLORS[variant];
     return (
-        <View style={[styles.pill, variant === 'success' ? styles.success : styles.danger]}>
-            <Text
-                style={variant === 'success' ? styles.successText : styles.dangerText}
-                className="font-poppins-medium text-xs"
-            >
+        <View style={[styles.pill, { backgroundColor: colors.background }]}>
+            <Text style={{ color: colors.text }} className="font-poppins-medium text-[0.775rem]">
                 {label}
             </Text>
         </View>
@@ -27,17 +31,5 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 4,
         borderRadius: 999,
-    },
-    success: {
-        backgroundColor: '#DCFCE7',
-    },
-    successText: {
-        color: '#15803D',
-    },
-    danger: {
-        backgroundColor: '#FEE2E2',
-    },
-    dangerText: {
-        color: '#B91C1C',
     },
 });

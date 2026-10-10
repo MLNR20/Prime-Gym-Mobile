@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Divider, IconButton, Text } from 'react-native-paper';
-import Pill from '../../components/Pill';
+import MemberStatusPill from '../../components/MemberStatusPill';
 import type { Member } from '../../models/Member';
 import { formatDateOnly, formatPhilippineTimestamp } from '../../utils/dateTime';
 
@@ -26,6 +26,23 @@ function DetailRow({ label, value }: DetailRowProps) {
     );
 }
 
+type DetailTableProps = {
+    rows: DetailRowProps[];
+};
+
+function DetailTable({ rows }: DetailTableProps) {
+    return (
+        <View style={styles.table}>
+            {rows.map((row, index) => (
+                <View key={row.label}>
+                    <DetailRow {...row} />
+                    {index < rows.length - 1 && <Divider style={styles.tableDivider} />}
+                </View>
+            ))}
+        </View>
+    );
+}
+
 export default function MemberDetailsScreen({ member, onBack, onEdit, onDelete }: MemberDetailsScreenProps) {
     const fullName = `${member.first_name} ${member.last_name}`;
 
@@ -37,21 +54,28 @@ export default function MemberDetailsScreen({ member, onBack, onEdit, onDelete }
                 end={{ x: 1, y: 1 }}
                 style={styles.header}
             >
-                <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
-                <View style={styles.headerInfo}>
-                    <Text className="text-2xl font-poppins-bold text-black">{fullName}</Text>
-                    <View style={styles.subtitleRow}>
-                        <Text style={styles.subtitle}>{member.plan}</Text>
-                        <Pill label={member.is_deleted ? 'Inactive' : 'Active'} variant={member.is_deleted ? 'danger' : 'success'} />
-                    </View>
+                <View style={styles.titleRow}>
+                    <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
+                    <Text className="text-[1.45rem] font-poppins-bold mt-[-0.18rem]">Details</Text>
                 </View>
             </LinearGradient>
+            <View style={styles.headerInfo}>
+                <Text className="text-2xl font-poppins-bold text-black">{fullName}</Text>
+                <View style={styles.subtitleRow}>
+                    <Text style={styles.subtitle}>{member.plan}</Text>
+                    <MemberStatusPill member={member} />
+                </View>
+            </View>
             <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-                <DetailRow label="Membership ID" value={member.id} />
-                <DetailRow label="Payment Date" value={formatDateOnly(member.payment_date)} />
-                <DetailRow label="Subscription Expiration" value={formatDateOnly(member.subscription_expiration_date)} />
-                <DetailRow label="Date Created" value={formatPhilippineTimestamp(member.date_created)} />
-                <DetailRow label="Date Updated" value={formatPhilippineTimestamp(member.date_updated)} />
+                <DetailTable
+                    rows={[
+                        { label: 'Membership ID', value: member.id },
+                        { label: 'Payment Date', value: formatDateOnly(member.payment_date) },
+                        { label: 'Subscription Expiration', value: formatDateOnly(member.subscription_expiration_date) },
+                        { label: 'Date Created', value: formatPhilippineTimestamp(member.date_created) },
+                        { label: 'Date Updated', value: formatPhilippineTimestamp(member.date_updated) },
+                    ]}
+                />
 
                 <View style={styles.actions}>
                     <Button mode="outlined" onPress={onEdit}>
@@ -73,18 +97,25 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     header: {
-        height: '22%',
-        paddingHorizontal: 24,
-        paddingTop: 48,
+        height: '36%',
+        justifyContent: 'flex-end',
+        paddingHorizontal: 32,
         paddingBottom: 24,
+    },
+    titleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between',
+        width: '100%',
+        marginLeft: -12,
     },
     backButton: {
         margin: 0,
-        marginLeft: -8,
     },
     headerInfo: {
         gap: 8,
+        paddingHorizontal: 32,
+        paddingTop: 24,
     },
     content: {
         flex: 1,
@@ -103,8 +134,18 @@ const styles = StyleSheet.create({
     subtitle: {
         color: '#5a3f00',
     },
+    table: {
+        width: '100%',
+        backgroundColor: '#F2F5F7',
+        borderRadius: 12,
+        paddingHorizontal: 16,
+    },
+    tableDivider: {
+        backgroundColor: '#E5E7EB',
+    },
     row: {
         gap: 2,
+        paddingVertical: 12,
     },
     rowLabel: {
         color: '#6B7280',

@@ -76,14 +76,16 @@ export default function SubscribersScreen() {
           label="Subscribers"
           onNavigate={() => setIsAdding(true)}
         />
-      </LinearGradient>
-      <View style={styles.content}>
         <Searchbar
           placeholder="Search members"
           onChangeText={setQuery}
           style={[commonStyles.searchBar, styles.searchBar]}
+          inputStyle={styles.searchInput}
+          placeholderTextColor="#9CA3AF"
           value={query}
         />
+      </LinearGradient>
+      <View style={styles.content}>
         <View style={styles.listWrapper}>
           <MemberListCard
             title="Subscribers"
@@ -110,10 +112,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   header: {
-    height: "22%",
+    height: "28%",
     justifyContent: "flex-end",
     paddingHorizontal: 32,
     paddingBottom: 24,
+    gap: 16,
   },
   content: {
     flex: 1,
@@ -123,6 +126,9 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     width: "100%",
+  },
+  searchInput: {
+    color: "#374151",
   },
   listWrapper: {
     width: "100%",

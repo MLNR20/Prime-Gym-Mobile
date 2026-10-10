@@ -3,6 +3,7 @@ import { SectionList, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Avatar, List, Searchbar, Text } from 'react-native-paper';
 import type { Member } from '../models/Member';
 import {commonStyles} from './commonStyles';
+import MemberStatusPill from './MemberStatusPill';
 import PaymentDateDivider from './PaymentDateDivider';
 
 type PaymentDateSection = {
@@ -52,7 +53,7 @@ export default function MemberListCard({
     return (
         <View style={[commonStyles.listView, styles.flexFill]}>
             {showSearchBar && (
-                <Searchbar placeholder="Search members" onChangeText={onQueryChange} style={commonStyles.searchBar} value={query} />
+                <Searchbar placeholder="Search members" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor="#9CA3AF" value={query} />
             )}
             {loading && <ActivityIndicator style={styles.spinner} />}
             {!loading && error && (
@@ -69,7 +70,11 @@ export default function MemberListCard({
                         return (
                             <List.Item
                                 title={fullName}
-                                description={`${member.plan}${member.is_deleted ? ' • Inactive' : ''}`}
+                                description={() => (
+                                    <View style={styles.descriptionRow}>
+                                        <MemberStatusPill member={member} />
+                                    </View>
+                                )}
                                 titleStyle={styles.itemTitle}
                                 style={commonStyles.cardForListView}
                                 onPress={onItemPress ? () => onItemPress(member) : undefined}
@@ -112,6 +117,12 @@ const styles = StyleSheet.create({
     },
     itemDescription: {
         color: '#5C4300',
+    },
+    descriptionRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        marginTop: 8,
     },
     spinner: {
         paddingVertical: 12,

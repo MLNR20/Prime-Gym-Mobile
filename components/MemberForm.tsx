@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Divider, SegmentedButtons, Text, TextInput } from 'react-native-paper';
+import { Button, SegmentedButtons, Text, TextInput } from 'react-native-paper';
 import type { Member, MembershipPlan } from '../models/Member';
-import { formatPhilippineTimestamp, nowInPhilippineTime } from '../utils/dateTime';
 import { commonStyles } from './commonStyles';
 
 const PLANS: MembershipPlan[] = ['Basic', 'Standard', 'Premium'];
@@ -27,7 +26,6 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
     const [paymentDate, setPaymentDate] = useState('');
     const [subscriptionExpirationDate, setSubscriptionExpirationDate] = useState('');
     const [plan, setPlan] = useState<MembershipPlan>('Basic');
-    const [dateCreated, setDateCreated] = useState('');
 
     useEffect(() => {
         setFirstName(editingMember?.first_name ?? '');
@@ -35,8 +33,6 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
         setPaymentDate(editingMember?.payment_date ?? '');
         setSubscriptionExpirationDate(editingMember?.subscription_expiration_date ?? '');
         setPlan(editingMember?.plan ?? 'Basic');
-        // A new member is created "now"; an existing one keeps its original creation timestamp.
-        setDateCreated(editingMember?.date_created ?? nowInPhilippineTime());
     }, [editingMember]);
 
     const handleSubmit = () => {
@@ -56,11 +52,8 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
             setPaymentDate('');
             setSubscriptionExpirationDate('');
             setPlan('Basic');
-            setDateCreated(nowInPhilippineTime());
         }
     };
-
-    const isActive = editingMember ? !editingMember.is_deleted : true;
 
     return (
         <View style={styles.container}>
@@ -87,22 +80,6 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
                 buttons={PLANS.map((planOption) => ({ value: planOption, label: planOption }))}
             />
 
-            <Divider style={styles.divider} />
-            <Text className="text-sm font-poppins-bold">Record Info</Text>
-            <TextInput
-                mode="outlined"
-                label="Date Created"
-                value={formatPhilippineTimestamp(dateCreated)}
-                editable={false}
-            />
-            <TextInput
-                mode="outlined"
-                label="Date Updated"
-                value={formatPhilippineTimestamp(nowInPhilippineTime())}
-                editable={false}
-            />
-            <TextInput mode="outlined" label="Status" value={isActive ? 'Active' : 'Inactive'} editable={false} />
-
             <View style={styles.actions}>
                 {editingMember && (
                     <Button mode="text" onPress={onCancel}>
@@ -121,9 +98,6 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         gap: 12,
-    },
-    divider: {
-        marginTop: 4,
     },
     actions: {
         flexDirection: 'row',

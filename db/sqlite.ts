@@ -32,6 +32,38 @@ function createMembersTableSql(table: string): string {
     `;
 }
 
+// Columns the `equipment` table must have, with the DEFAULT used when backfilling a column
+// onto a table created by an earlier schema version.
+const EQUIPMENT_COLUMNS: [name: string, definition: string][] = [
+    ['title', "TEXT NOT NULL DEFAULT ''"],
+    ['is_active', 'INTEGER NOT NULL DEFAULT 1'],
+    ['date_created', "TEXT NOT NULL DEFAULT ''"],
+    ['date_updated', "TEXT NOT NULL DEFAULT ''"],
+];
+
+function createEquipmentTableSql(table: string): string {
+    return `
+        CREATE TABLE IF NOT EXISTS ${table} (
+            id TEXT PRIMARY KEY NOT NULL,
+            title TEXT NOT NULL,
+            is_active INTEGER NOT NULL DEFAULT 1,
+            date_created TEXT NOT NULL,
+            date_updated TEXT NOT NULL
+        );
+    `;
+}
+
+/** Backfills any columns missing from an existing `equipment` table (see migrateMembersTable). */
+async function migrateEquipmentTable(db: SQLiteDatabase): Promise<void> {
+    const existingColumns = await db.getAllAsync<{ name: string }>(`PRAGMA table_info(equipment)`);
+    const existingNames = new Set(existingColumns.map((column) => column.name));
+    for (const [name, definition] of EQUIPMENT_COLUMNS) {
+        if (!existingNames.has(name)) {
+            await db.execAsync(`ALTER TABLE equipment ADD COLUMN ${name} ${definition};`);
+        }
+    }
+}
+
 /**
  * `CREATE TABLE IF NOT EXISTS` is a no-op once the table already exists on-device, so a column
  * added to the schema after a user already has the app doesn't show up on its own — backfill any
@@ -77,6 +109,8 @@ export function getDb(): Promise<SQLiteDatabase> {
         dbPromise = openDatabaseAsync('prime-gym.db').then(async (db) => {
             await db.execAsync(createMembersTableSql('members'));
             await migrateMembersTable(db);
+            await db.execAsync(createEquipmentTableSql('equipment'));
+            await migrateEquipmentTable(db);
             return db;
         });
     }

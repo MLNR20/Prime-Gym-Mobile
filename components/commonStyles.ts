@@ -35,7 +35,7 @@ export const commonStyles = StyleSheet.create({
         backgroundColor: '#F2F5F7',
         borderRadius: 8,
         paddingHorizontal: 16,
-        paddingVertical: 4,
+        paddingVertical: 10,
     },
     submitButton:
     {
@@ -101,9 +101,6 @@ export const quickActionsGridStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 8,
-    },
-    itemPressed: {
-        opacity: 0.7,
     },
     iconContainer: {
         width: '100%',

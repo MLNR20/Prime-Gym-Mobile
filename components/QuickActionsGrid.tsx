@@ -7,6 +7,7 @@ type QuickAction = {
   key: string;
   label: string;
   icon: keyof typeof Ionicons.glyphMap;
+  iconBg?: string;
 };
 
 const actions: QuickAction[] = [
@@ -69,14 +70,15 @@ export default function QuickActionsGrid({
                 <Pressable
                   style={styles.pressable}
                   onPress={() => onPress?.(action.key)}
+                  android_ripple={null}
                 >
-                  {({ pressed }) => (
-                  <View style={[styles.item, pressed && styles.itemPressed]}>
+                  <View style={styles.item}>
                   <View style={styles.iconContainer}>
                     <View
                       style={[
                         styles.iconWrapper,
                         { width: iconWrapperSize, height: iconWrapperSize },
+                        action.iconBg ? { backgroundColor: action.iconBg } : null,
                       ]}
                     >
                       <Ionicons
@@ -99,7 +101,6 @@ export default function QuickActionsGrid({
                     </Text>
                   </View>
                   </View>
-                  )}
                 </Pressable>
               </View>
             ))}

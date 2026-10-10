@@ -10,7 +10,7 @@ type LabelHeaderProps = {
 export default function LabelHeader({ label, icon = 'bell-outline', onPress }: LabelHeaderProps) {
     return (
         <View style={styles.row}>
-            <Text className="text-xl font-poppins-bold">{label}</Text>
+            <Text className="text-[1.45rem] font-poppins-bold">{label}</Text>
             <IconButton icon={icon} onPress={onPress} />
         </View>
     );
