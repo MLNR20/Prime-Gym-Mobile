@@ -1,9 +1,9 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRecentActivityViewModel } from '../viewmodels/useRecentActivityViewModel';
 import { formatPhilippineTimestamp } from '../utils/dateTime';
 
-export default function RecentActivityCard({ onViewMembers }: { onViewMembers?: () => void }) {
+export default function RecentActivityCard() {
     const { entries, loading, error } = useRecentActivityViewModel();
 
     return (
@@ -35,15 +35,6 @@ export default function RecentActivityCard({ onViewMembers }: { onViewMembers?: 
                             </View>
                         </View>
                     ))}
-                <Pressable
-                    style={({ pressed }) => [styles.footer, pressed && styles.footerPressed]}
-                    onPress={onViewMembers}
-                >
-                    <View style={styles.iconWrapper}>
-                        <Ionicons name="people-outline" size={18} color="#FBBF77" />
-                    </View>
-                    <Text style={styles.footerLabel}>View all members</Text>
-                </Pressable>
             </View>
         </View>
     );
@@ -95,23 +86,5 @@ const styles = StyleSheet.create({
     timestamp: {
         fontSize: 12,
         color: '#6B7280',
-    },
-    footer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 10,
-        paddingTop: 12,
-        marginTop: 4,
-        borderTopWidth: 1,
-        borderTopColor: '#F2F5F7',
-    },
-    footerPressed: {
-        opacity: 0.7,
-    },
-    footerLabel: {
-        fontSize: 13,
-        fontWeight: 'bold',
-        color: '#000000',
     },
 });

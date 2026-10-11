@@ -56,9 +56,11 @@ export default function ContactDetailsScreen({ contact, onBack, onEdit, onDelete
                     <View style={styles.backButtonRow}>
                         <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
                     </View>
-                    <Text style={styles.detailsTitle} className="text-[1.45rem] font-poppins-bold">
-                        Details
-                    </Text>
+                    <View style={styles.titleTextRow}>
+                        <Text style={styles.detailsTitle} className="text-[1.45rem] font-poppins-bold">
+                            Details
+                        </Text>
+                    </View>
                 </View>
             </LinearGradient>
             <View style={styles.headerInfo}>
@@ -106,16 +108,24 @@ const styles = StyleSheet.create({
     },
     titleRow: {
         width: '100%',
+        height: 112,
         marginLeft: -12,
+        gap: 8,
     },
     backButtonRow: {
-        flex: 2,
+        flex: 1,
+        justifyContent: 'center',
     },
     backButton: {
         margin: 0,
     },
+    titleTextRow: {
+        flex: 1,
+        justifyContent: 'center',
+    },
     detailsTitle: {
         color: '#000000',
+        fontWeight: 'bold',
     },
     headerInfo: {
         gap: 8,

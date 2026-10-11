@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginLeft: -12,
+        gap: 8,
     },
     detailsTitle: {
         color: '#000000',
