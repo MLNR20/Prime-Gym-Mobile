@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { MemberFormValues } from '../components/MemberForm';
 import type { Member } from '../models/Member';
-import { memberRepository } from '../repositories/activeRepositories';
+import { auditLogRepository, memberRepository } from '../repositories/activeRepositories';
 import { nowInPhilippineTime } from '../utils/dateTime';
 
 export function useSubscribersViewModel() {
@@ -52,6 +52,12 @@ export function useSubscribersViewModel() {
                 date_created: timestamp,
                 date_updated: timestamp,
                 is_deleted: false,
+            });
+            await auditLogRepository.add({
+                reference: `${values.first_name} ${values.last_name}`,
+                action: 'Added new subscriber',
+                date_created: timestamp,
+                date_updated: timestamp,
             });
         }
     };

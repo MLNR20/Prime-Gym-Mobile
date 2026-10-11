@@ -19,8 +19,6 @@ const actions: QuickAction[] = [
   { key: "contacts", label: "Contacts", icon: "call-outline" },
   { key: "lockers", label: "Lockers", icon: "key-outline" },
   { key: "reports", label: "Reports", icon: "bar-chart-outline" },
-  { key: "settings", label: "Settings", icon: "settings-outline" },
-  { key: "audit", label: "Audit", icon: "clipboard-outline" },
 ];
 
 const COLUMNS = 4;

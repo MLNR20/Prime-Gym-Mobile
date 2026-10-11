@@ -1,3 +1,4 @@
+import type { AuditLog, NewAuditLog } from '../models/AuditLog';
 import type { Contact, NewContact } from '../models/Contact';
 import type { Equipment, NewEquipment } from '../models/Equipment';
 import type { LockerKey, NewLockerKey } from '../models/LockerKey';
@@ -6,6 +7,7 @@ import { mirroredContactRepository } from './MirroredContactRepository';
 import { mirroredLockerKeyRepository } from './MirroredLockerKeyRepository';
 import { mirroredMemberRepository } from './MirroredMemberRepository';
 import type { Repository } from './Repository';
+import { sqliteAuditLogRepository } from './SqliteAuditLogRepository';
 import { sqliteEquipmentRepository } from './SqliteEquipmentRepository';
 
 // SQLite is the source of truth; new members are also mirrored to Firestore for a cloud backup
@@ -19,3 +21,6 @@ export const equipmentRepository: Repository<Equipment, NewEquipment> = sqliteEq
 // Contacts and locker keys are mirrored to Firestore for a cloud backup, same as members.
 export const contactRepository: Repository<Contact, NewContact> = mirroredContactRepository;
 export const lockerKeyRepository: Repository<LockerKey, NewLockerKey> = mirroredLockerKeyRepository;
+
+// Audit log entries are device-generated history, not user business data, so they stay local-only.
+export const auditLogRepository: Repository<AuditLog, NewAuditLog> = sqliteAuditLogRepository;

@@ -13,7 +13,7 @@ export default function RecentActivityCard({ onViewMembers }: { onViewMembers?: 
                 {loading && <Text style={styles.message}>Loading...</Text>}
                 {!loading && error && <Text style={styles.message}>{error}</Text>}
                 {!loading && !error && entries.length === 0 && (
-                    <Text style={styles.message}>No recent check-ins.</Text>
+                    <Text style={styles.message}>No recent activity.</Text>
                 )}
                 {!loading &&
                     !error &&
@@ -27,10 +27,10 @@ export default function RecentActivityCard({ onViewMembers }: { onViewMembers?: 
                             </View>
                             <View style={styles.textGroup}>
                                 <Text style={styles.name} numberOfLines={1}>
-                                    {entry.memberName}
+                                    {entry.action}
                                 </Text>
-                                <Text style={styles.timestamp}>
-                                    {formatPhilippineTimestamp(new Date(entry.checkedInAt).toISOString())}
+                                <Text style={styles.timestamp} numberOfLines={1}>
+                                    {entry.reference} · {formatPhilippineTimestamp(entry.date_created)}
                                 </Text>
                             </View>
                         </View>

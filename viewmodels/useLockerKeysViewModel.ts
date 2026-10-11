@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { LockerKeyFormValues } from '../components/LockerKeyForm';
 import type { LockerKey } from '../models/LockerKey';
-import { lockerKeyRepository } from '../repositories/activeRepositories';
+import { auditLogRepository, lockerKeyRepository } from '../repositories/activeRepositories';
 import { nowInPhilippineTime } from '../utils/dateTime';
 
 export function useLockerKeysViewModel() {
@@ -49,6 +49,12 @@ export function useLockerKeysViewModel() {
         } else {
             await lockerKeyRepository.add({
                 ...values,
+                date_created: timestamp,
+                date_updated: timestamp,
+            });
+            await auditLogRepository.add({
+                reference: `Locker ${values.locker_number}`,
+                action: 'Added new locker key',
                 date_created: timestamp,
                 date_updated: timestamp,
             });

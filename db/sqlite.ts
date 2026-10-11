@@ -140,6 +140,38 @@ async function migrateLockerKeysTable(db: SQLiteDatabase): Promise<void> {
     }
 }
 
+// Columns the `audit_logs` table must have, with the DEFAULT used when backfilling a column
+// onto a table created by an earlier schema version.
+const AUDIT_LOGS_COLUMNS: [name: string, definition: string][] = [
+    ['reference', "TEXT NOT NULL DEFAULT ''"],
+    ['action', "TEXT NOT NULL DEFAULT ''"],
+    ['date_created', "TEXT NOT NULL DEFAULT ''"],
+    ['date_updated', "TEXT NOT NULL DEFAULT ''"],
+];
+
+function createAuditLogsTableSql(table: string): string {
+    return `
+        CREATE TABLE IF NOT EXISTS ${table} (
+            id TEXT PRIMARY KEY NOT NULL,
+            reference TEXT NOT NULL,
+            action TEXT NOT NULL,
+            date_created TEXT NOT NULL,
+            date_updated TEXT NOT NULL
+        );
+    `;
+}
+
+/** Backfills any columns missing from an existing `audit_logs` table (see migrateMembersTable). */
+async function migrateAuditLogsTable(db: SQLiteDatabase): Promise<void> {
+    const existingColumns = await db.getAllAsync<{ name: string }>(`PRAGMA table_info(audit_logs)`);
+    const existingNames = new Set(existingColumns.map((column) => column.name));
+    for (const [name, definition] of AUDIT_LOGS_COLUMNS) {
+        if (!existingNames.has(name)) {
+            await db.execAsync(`ALTER TABLE audit_logs ADD COLUMN ${name} ${definition};`);
+        }
+    }
+}
+
 /**
  * `CREATE TABLE IF NOT EXISTS` is a no-op once the table already exists on-device, so a column
  * added to the schema after a user already has the app doesn't show up on its own — backfill any
@@ -191,6 +223,8 @@ export function getDb(): Promise<SQLiteDatabase> {
             await migrateContactsTable(db);
             await db.execAsync(createLockerKeysTableSql('locker_keys'));
             await migrateLockerKeysTable(db);
+            await db.execAsync(createAuditLogsTableSql('audit_logs'));
+            await migrateAuditLogsTable(db);
             return db;
         });
     }

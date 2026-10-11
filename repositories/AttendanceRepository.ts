@@ -1,6 +1,5 @@
-import { collection, deleteDoc, doc, limit, onSnapshot, orderBy, query, setDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
-import type { AttendanceRecord } from '../models/AttendanceRecord';
 
 const attendanceCollection = collection(db, 'attendance');
 
@@ -22,25 +21,6 @@ export function subscribeToAttendanceForDate(
                 snapshot.docs.map((docSnapshot) => docSnapshot.data().memberId as string)
             );
             onData(presentMemberIds);
-        },
-        onError
-    );
-}
-
-export function subscribeToRecentAttendance(
-    count: number,
-    onData: (records: AttendanceRecord[]) => void,
-    onError: (error: Error) => void
-) {
-    const recentQuery = query(attendanceCollection, orderBy('checkedInAt', 'desc'), limit(count));
-    return onSnapshot(
-        recentQuery,
-        (snapshot) => {
-            const records = snapshot.docs.map((docSnapshot) => ({
-                id: docSnapshot.id,
-                ...(docSnapshot.data() as Omit<AttendanceRecord, 'id'>),
-            }));
-            onData(records);
         },
         onError
     );
