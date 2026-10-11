@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { MemberFormValues } from '../components/MemberForm';
 import type { Member } from '../models/Member';
-import { auditLogRepository, memberRepository } from '../repositories/activeRepositories';
+import { memberRepository } from '../repositories/activeRepositories';
+import { logAudit } from '../utils/auditLog';
 import { nowInPhilippineTime } from '../utils/dateTime';
 
 export function useSubscribersViewModel() {
@@ -35,15 +36,20 @@ export function useSubscribersViewModel() {
         );
     }, [members, query]);
 
-    const removeMember = (id: string) => memberRepository.remove(id);
+    const removeMember = async (member: Member) => {
+        await memberRepository.remove(member.id);
+        await logAudit(`${member.first_name} ${member.last_name}`, 'Removed subscriber');
+    };
 
     const startEditing = (member: Member) => setEditingMember(member);
     const cancelEditing = () => setEditingMember(null);
 
     const submitMember = async (values: MemberFormValues) => {
         const timestamp = nowInPhilippineTime();
+        const reference = `${values.first_name} ${values.last_name}`;
         if (editingMember) {
             await memberRepository.update(editingMember.id, { ...values, date_updated: timestamp });
+            await logAudit(reference, 'Updated subscriber');
             setEditingMember(null);
         } else {
             // New members are always created active, timestamped in Philippine Standard Time.
@@ -53,12 +59,7 @@ export function useSubscribersViewModel() {
                 date_updated: timestamp,
                 is_deleted: false,
             });
-            await auditLogRepository.add({
-                reference: `${values.first_name} ${values.last_name}`,
-                action: 'Added new subscriber',
-                date_created: timestamp,
-                date_updated: timestamp,
-            });
+            await logAudit(reference, 'Added new subscriber');
         }
     };
 

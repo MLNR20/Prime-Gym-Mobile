@@ -57,7 +57,7 @@ export default function EquipmentScreen() {
           startEditing(viewingEquipment);
         }}
         onDelete={() => {
-          removeEquipment(viewingEquipment.id);
+          removeEquipment(viewingEquipment);
           setViewingEquipment(null);
         }}
       />

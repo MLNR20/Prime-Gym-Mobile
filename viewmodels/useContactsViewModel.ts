@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { ContactFormValues } from '../components/ContactForm';
 import type { Contact } from '../models/Contact';
 import { contactRepository } from '../repositories/activeRepositories';
+import { logAudit } from '../utils/auditLog';
 import { nowInPhilippineTime } from '../utils/dateTime';
 
 export function useContactsViewModel() {
@@ -36,7 +37,10 @@ export function useContactsViewModel() {
         );
     }, [contacts, query]);
 
-    const removeContact = (id: string) => contactRepository.remove(id);
+    const removeContact = async (contact: Contact) => {
+        await contactRepository.remove(contact.id);
+        await logAudit(contact.name, 'Removed contact');
+    };
 
     const startEditing = (contact: Contact) => setEditingContact(contact);
     const cancelEditing = () => setEditingContact(null);
@@ -45,6 +49,7 @@ export function useContactsViewModel() {
         const timestamp = nowInPhilippineTime();
         if (editingContact) {
             await contactRepository.update(editingContact.id, { ...values, date_updated: timestamp });
+            await logAudit(values.name, 'Updated contact');
             setEditingContact(null);
         } else {
             await contactRepository.add({
@@ -53,6 +58,7 @@ export function useContactsViewModel() {
                 date_updated: timestamp,
                 is_deleted: false,
             });
+            await logAudit(values.name, 'Added new contact');
         }
     };
 

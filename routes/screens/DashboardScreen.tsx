@@ -9,18 +9,20 @@ import { dashboardScreenStyles } from '../../components/commonStyles';
 export default function DashboardScreen() {
     const navigation = useNavigation();
 
+    const navigateToManage = (section: string) => (navigation.navigate as (name: string, params: object) => void)('Manage', { section });
+
     const handleQuickAction = (key: string) => {
         if (key === 'members') {
-            navigation.navigate('Subscribers' as never);
+            navigateToManage('subscribers');
         }
         if (key === 'equipment') {
-            navigation.navigate('Equipment' as never);
+            navigateToManage('equipment');
         }
         if (key === 'contacts') {
-            navigation.navigate('Contacts' as never);
+            navigateToManage('contacts');
         }
         if (key === 'lockers') {
-            navigation.navigate('LockerKeys' as never);
+            navigateToManage('lockerKeys');
         }
     };
 

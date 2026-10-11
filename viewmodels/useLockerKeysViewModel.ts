@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { LockerKeyFormValues } from '../components/LockerKeyForm';
 import type { LockerKey } from '../models/LockerKey';
-import { auditLogRepository, lockerKeyRepository } from '../repositories/activeRepositories';
+import { lockerKeyRepository } from '../repositories/activeRepositories';
+import { logAudit } from '../utils/auditLog';
 import { nowInPhilippineTime } from '../utils/dateTime';
 
 export function useLockerKeysViewModel() {
@@ -36,15 +37,20 @@ export function useLockerKeysViewModel() {
         );
     }, [lockerKeys, query]);
 
-    const removeLockerKey = (id: string) => lockerKeyRepository.remove(id);
+    const removeLockerKey = async (lockerKey: LockerKey) => {
+        await lockerKeyRepository.remove(lockerKey.id);
+        await logAudit(`Locker ${lockerKey.locker_number}`, 'Removed locker key');
+    };
 
     const startEditing = (lockerKey: LockerKey) => setEditingLockerKey(lockerKey);
     const cancelEditing = () => setEditingLockerKey(null);
 
     const submitLockerKey = async (values: LockerKeyFormValues) => {
         const timestamp = nowInPhilippineTime();
+        const reference = `Locker ${values.locker_number}`;
         if (editingLockerKey) {
             await lockerKeyRepository.update(editingLockerKey.id, { ...values, date_updated: timestamp });
+            await logAudit(reference, 'Updated locker key');
             setEditingLockerKey(null);
         } else {
             await lockerKeyRepository.add({
@@ -52,12 +58,7 @@ export function useLockerKeysViewModel() {
                 date_created: timestamp,
                 date_updated: timestamp,
             });
-            await auditLogRepository.add({
-                reference: `Locker ${values.locker_number}`,
-                action: 'Added new locker key',
-                date_created: timestamp,
-                date_updated: timestamp,
-            });
+            await logAudit(reference, 'Added new locker key');
         }
     };
 

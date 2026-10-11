@@ -4,10 +4,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import DashboardScreen from './screens/DashboardScreen';
 import AttendanceScreen from './screens/AttendanceScreen';
-import SubscribersScreen from './screens/SubscribersScreen';
-import EquipmentScreen from './screens/EquipmentScreen';
-import ContactsScreen from './screens/ContactsScreen';
-import LockerKeysScreen from './screens/LockerKeysScreen';
+import ManageScreen from './screens/ManageScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
@@ -16,10 +13,7 @@ type IconName = ComponentProps<typeof MaterialCommunityIcons>['name'];
 const ICONS: Record<string, IconName> = {
     Dashboard: 'view-dashboard',
     Attendance: 'calendar-check',
-    Subscribers: 'account-group',
-    Equipment: 'dumbbell',
-    Contacts: 'card-account-phone-outline',
-    LockerKeys: 'key-variant',
+    Manage: 'briefcase-outline',
     Profile: 'account',
     Settings: 'cog',
 };
@@ -38,10 +32,7 @@ export default function BottomTabs() {
         >
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
             <Tab.Screen name="Attendance" component={AttendanceScreen} />
-            <Tab.Screen name="Subscribers" component={SubscribersScreen} />
-            <Tab.Screen name="Equipment" component={EquipmentScreen} />
-            <Tab.Screen name="Contacts" component={ContactsScreen} />
-            <Tab.Screen name="LockerKeys" component={LockerKeysScreen} options={{ title: 'Locker Keys' }} />
+            <Tab.Screen name="Manage" component={ManageScreen} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
             <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator>

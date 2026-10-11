@@ -53,8 +53,12 @@ export default function LockerKeyDetailsScreen({ lockerKey, onBack, onEdit, onDe
                 style={styles.header}
             >
                 <View style={styles.titleRow}>
-                    <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
-                    <Text className="text-[1.45rem] font-poppins-bold mt-[-0.18rem]">Details</Text>
+                    <View style={styles.backButtonRow}>
+                        <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
+                    </View>
+                    <Text style={styles.detailsTitle} className="text-[1.45rem] font-poppins-bold">
+                        Details
+                    </Text>
                 </View>
             </LinearGradient>
             <View style={styles.headerInfo}>
@@ -99,14 +103,17 @@ const styles = StyleSheet.create({
         paddingBottom: 24,
     },
     titleRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
         width: '100%',
         marginLeft: -12,
     },
+    backButtonRow: {
+        flex: 2,
+    },
     backButton: {
         margin: 0,
+    },
+    detailsTitle: {
+        color: '#000000',
     },
     headerInfo: {
         gap: 8,

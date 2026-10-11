@@ -57,7 +57,7 @@ export default function ContactsScreen() {
           startEditing(viewingContact);
         }}
         onDelete={() => {
-          removeContact(viewingContact.id);
+          removeContact(viewingContact);
           setViewingContact(null);
         }}
       />

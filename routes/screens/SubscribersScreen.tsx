@@ -57,7 +57,7 @@ export default function SubscribersScreen() {
           startEditing(viewingMember);
         }}
         onDelete={() => {
-          removeMember(viewingMember.id);
+          removeMember(viewingMember);
           setViewingMember(null);
         }}
       />

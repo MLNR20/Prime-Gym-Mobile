@@ -57,7 +57,7 @@ export default function LockerKeysScreen() {
           startEditing(viewingLockerKey);
         }}
         onDelete={() => {
-          removeLockerKey(viewingLockerKey.id);
+          removeLockerKey(viewingLockerKey);
           setViewingLockerKey(null);
         }}
       />

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { EquipmentFormValues } from '../components/EquipmentForm';
 import type { Equipment } from '../models/Equipment';
 import { equipmentRepository } from '../repositories/activeRepositories';
+import { logAudit } from '../utils/auditLog';
 import { nowInPhilippineTime } from '../utils/dateTime';
 
 export function useEquipmentViewModel() {
@@ -31,7 +32,10 @@ export function useEquipmentViewModel() {
         return equipment.filter((item) => item.title.toLowerCase().includes(normalizedQuery));
     }, [equipment, query]);
 
-    const removeEquipment = (id: string) => equipmentRepository.remove(id);
+    const removeEquipment = async (item: Equipment) => {
+        await equipmentRepository.remove(item.id);
+        await logAudit(item.title, 'Removed equipment');
+    };
 
     const startEditing = (item: Equipment) => setEditingEquipment(item);
     const cancelEditing = () => setEditingEquipment(null);
@@ -40,6 +44,7 @@ export function useEquipmentViewModel() {
         const timestamp = nowInPhilippineTime();
         if (editingEquipment) {
             await equipmentRepository.update(editingEquipment.id, { ...values, date_updated: timestamp });
+            await logAudit(values.title, 'Updated equipment');
             setEditingEquipment(null);
         } else {
             await equipmentRepository.add({
@@ -47,6 +52,7 @@ export function useEquipmentViewModel() {
                 date_created: timestamp,
                 date_updated: timestamp,
             });
+            await logAudit(values.title, 'Added new equipment');
         }
     };
 
