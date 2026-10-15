@@ -55,18 +55,14 @@ export default function MemberDetailsScreen({ member, onBack, onEdit, onDelete }
                 style={styles.header}
             >
                 <View style={styles.titleRow}>
-                    <View style={styles.backButtonRow}>
-                        <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
-                    </View>
-                    <View style={styles.titleTextRow}>
-                        <Text style={styles.detailsTitle} className="text-[1.45rem] font-poppins-bold">
-                            Details
-                        </Text>
-                    </View>
+                    <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
+                    <Text style={styles.detailsTitle} className="text-[1.45rem] font-poppins-bold">
+                        Details
+                    </Text>
                 </View>
             </LinearGradient>
             <View style={styles.headerInfo}>
-                <Text className="text-2xl font-poppins-bold text-black">{fullName}</Text>
+                <Text style={styles.fullName} className="text-2xl font-poppins-bold text-black">{fullName}</Text>
                 <View style={styles.subtitleRow}>
                     <Text style={styles.subtitle}>{member.plan}</Text>
                     <MemberStatusPill member={member} />
@@ -104,30 +100,23 @@ const styles = StyleSheet.create({
     },
     header: {
         height: '36%',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
         paddingHorizontal: 32,
-        paddingBottom: 24,
+        paddingTop: 48,
     },
     titleRow: {
-        width: '100%',
-        height: 112,
         marginLeft: -12,
-        gap: 8,
-    },
-    backButtonRow: {
-        flex: 1,
-        justifyContent: 'center',
+        gap: 4,
     },
     backButton: {
         margin: 0,
-    },
-    titleTextRow: {
-        flex: 1,
-        justifyContent: 'center',
+        marginLeft: 0,
+        alignSelf: 'flex-start',
     },
     detailsTitle: {
         color: '#000000',
         fontWeight: 'bold',
+        marginTop: '20%',
     },
     headerInfo: {
         gap: 8,
@@ -148,6 +137,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 8,
     },
+    fullName: {
+        color: '#000000',
+    },
     subtitle: {
         color: '#5a3f00',
     },
@@ -166,11 +158,12 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
     },
     rowLabel: {
-        color: '#6B7280',
+        color: '#E5E7EB',
         fontSize: 12,
+        fontWeight: 'bold',
     },
     rowValue: {
-        color: '#3F2D00',
+        color: '#000000',
         fontSize: 16,
     },
     actions: {
