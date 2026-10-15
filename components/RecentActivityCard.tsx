@@ -23,7 +23,7 @@ export default function RecentActivityCard() {
                             style={[styles.row, index < entries.length - 1 && styles.rowDivider]}
                         >
                             <View style={styles.iconWrapper}>
-                                <Ionicons name="checkmark-done-outline" size={18} color="#FBBF77" />
+                                <Ionicons name="checkmark-done-outline" size={32} color="#FBBF77" />
                             </View>
                             <View style={styles.textGroup}>
                                 <Text style={styles.name} numberOfLines={1}>
