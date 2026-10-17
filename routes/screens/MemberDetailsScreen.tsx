@@ -59,15 +59,16 @@ export default function MemberDetailsScreen({ member, onBack, onEdit, onDelete }
                     <Text style={styles.detailsTitle} className="text-[1.45rem] font-poppins-bold">
                         Details
                     </Text>
+                    <View style={styles.titleRowSpacer} />
+                </View>
+                <View style={styles.headerInfo}>
+                    <Text style={styles.fullName} className="text-2xl font-poppins-bold text-black">{fullName}</Text>
+                    <View style={styles.subtitleRow}>
+                        <Text style={styles.subtitle}>{member.plan}</Text>
+                        <MemberStatusPill member={member} />
+                    </View>
                 </View>
             </LinearGradient>
-            <View style={styles.headerInfo}>
-                <Text style={styles.fullName} className="text-2xl font-poppins-bold text-black">{fullName}</Text>
-                <View style={styles.subtitleRow}>
-                    <Text style={styles.subtitle}>{member.plan}</Text>
-                    <MemberStatusPill member={member} />
-                </View>
-            </View>
             <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
                 <DetailTable
                     rows={[
@@ -105,23 +106,27 @@ const styles = StyleSheet.create({
         paddingTop: 48,
     },
     titleRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         marginLeft: -12,
-        gap: 4,
     },
     backButton: {
         margin: 0,
         marginLeft: 0,
-        alignSelf: 'flex-start',
+    },
+    titleRowSpacer: {
+        width: 48,
     },
     detailsTitle: {
+        flex: 1,
         color: '#000000',
         fontWeight: 'bold',
-        marginTop: '20%',
+        textAlign: 'center',
     },
     headerInfo: {
         gap: 8,
-        paddingHorizontal: 32,
-        paddingTop: 24,
+        marginTop: 24,
     },
     content: {
         flex: 1,
