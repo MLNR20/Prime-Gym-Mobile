@@ -1,6 +1,6 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Divider, IconButton, Text } from 'react-native-paper';
+import { Button, Divider, Text } from 'react-native-paper';
+import DetailsNavbar from '../../components/DetailsNavbar';
 import MemberStatusPill from '../../components/MemberStatusPill';
 import type { Member } from '../../models/Member';
 import { formatDateOnly, formatPhilippineTimestamp } from '../../utils/dateTime';
@@ -48,27 +48,14 @@ export default function MemberDetailsScreen({ member, onBack, onEdit, onDelete }
 
     return (
         <View style={styles.screen}>
-            <LinearGradient
-                colors={['#F59E0B', '#FFC107']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.header}
-            >
-                <View style={styles.titleRow}>
-                    <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
-                    <Text style={styles.detailsTitle} className="text-[1.45rem] font-poppins-bold">
-                        Details
-                    </Text>
-                    <View style={styles.titleRowSpacer} />
+            <DetailsNavbar onBack={onBack} />
+            <View style={styles.headerInfo}>
+                <Text style={styles.fullName} className="text-2xl font-poppins-bold text-black">{fullName}</Text>
+                <View style={styles.subtitleRow}>
+                    <Text style={styles.subtitle}>{member.plan}</Text>
+                    <MemberStatusPill member={member} />
                 </View>
-                <View style={styles.headerInfo}>
-                    <Text style={styles.fullName} className="text-2xl font-poppins-bold text-black">{fullName}</Text>
-                    <View style={styles.subtitleRow}>
-                        <Text style={styles.subtitle}>{member.plan}</Text>
-                        <MemberStatusPill member={member} />
-                    </View>
-                </View>
-            </LinearGradient>
+            </View>
             <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
                 <DetailTable
                     rows={[
@@ -99,34 +86,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    header: {
-        height: '36%',
-        justifyContent: 'flex-start',
-        paddingHorizontal: 32,
-        paddingTop: 48,
-    },
-    titleRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginLeft: -12,
-    },
-    backButton: {
-        margin: 0,
-        marginLeft: 0,
-    },
-    titleRowSpacer: {
-        width: 48,
-    },
-    detailsTitle: {
-        flex: 1,
-        color: '#000000',
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
     headerInfo: {
         gap: 8,
-        marginTop: 24,
+        paddingHorizontal: 32,
+        paddingTop: 24,
     },
     content: {
         flex: 1,

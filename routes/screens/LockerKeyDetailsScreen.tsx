@@ -1,6 +1,6 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, Divider, IconButton, Text } from 'react-native-paper';
+import { Button, Divider, Text } from 'react-native-paper';
+import DetailsNavbar from '../../components/DetailsNavbar';
 import LockerKeyStatusPill from '../../components/LockerKeyStatusPill';
 import type { LockerKey } from '../../models/LockerKey';
 import { formatPhilippineTimestamp } from '../../utils/dateTime';
@@ -46,49 +46,35 @@ function DetailTable({ rows }: DetailTableProps) {
 export default function LockerKeyDetailsScreen({ lockerKey, onBack, onEdit, onDelete }: LockerKeyDetailsScreenProps) {
     return (
         <View style={styles.screen}>
-            <LinearGradient
-                colors={['#F59E0B', '#FFC107']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.header}
-            >
-                <View style={styles.titleRow}>
-                    <View style={styles.backButtonRow}>
-                        <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
-                    </View>
-                    <View style={styles.titleTextRow}>
-                        <Text style={styles.detailsTitle} className="text-[1.45rem] font-poppins-bold">
-                            Details
-                        </Text>
+            <DetailsNavbar onBack={onBack} />
+            <View style={styles.body}>
+                <View style={styles.headerInfo}>
+                    <Text className="text-2xl font-poppins-bold text-black">{`Locker ${lockerKey.locker_number}`}</Text>
+                    <View style={styles.subtitleRow}>
+                        <Text style={styles.subtitle}>{lockerKey.key_code}</Text>
+                        <LockerKeyStatusPill lockerKey={lockerKey} />
                     </View>
                 </View>
-            </LinearGradient>
-            <View style={styles.headerInfo}>
-                <Text className="text-2xl font-poppins-bold text-black">{`Locker ${lockerKey.locker_number}`}</Text>
-                <View style={styles.subtitleRow}>
-                    <Text style={styles.subtitle}>{lockerKey.key_code}</Text>
-                    <LockerKeyStatusPill lockerKey={lockerKey} />
-                </View>
-            </View>
-            <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
-                <DetailTable
-                    rows={[
-                        { label: 'Assigned To', value: lockerKey.assigned_to || '—' },
-                        { label: 'Date Created', value: formatPhilippineTimestamp(lockerKey.date_created) },
-                        { label: 'Date Updated', value: formatPhilippineTimestamp(lockerKey.date_updated) },
-                    ]}
-                />
+                <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+                    <DetailTable
+                        rows={[
+                            { label: 'Assigned To', value: lockerKey.assigned_to || '—' },
+                            { label: 'Date Created', value: formatPhilippineTimestamp(lockerKey.date_created) },
+                            { label: 'Date Updated', value: formatPhilippineTimestamp(lockerKey.date_updated) },
+                        ]}
+                    />
 
-                <View style={styles.actions}>
-                    <Button mode="outlined" onPress={onEdit}>
-                        Edit
-                    </Button>
-                    <Button mode="contained" buttonColor="#DC2626" onPress={onDelete}>
-                        Delete
-                    </Button>
-                </View>
-                <Text style={styles.footerSubtext}>Manage your locker keys right here</Text>
-            </ScrollView>
+                    <View style={styles.actions}>
+                        <Button mode="outlined" onPress={onEdit}>
+                            Edit
+                        </Button>
+                        <Button mode="contained" buttonColor="#DC2626" onPress={onDelete}>
+                            Delete
+                        </Button>
+                    </View>
+                    <Text style={styles.footerSubtext}>Manage your locker keys right here</Text>
+                </ScrollView>
+            </View>
         </View>
     );
 }
@@ -98,32 +84,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    header: {
-        height: '36%',
-        justifyContent: 'flex-end',
-        paddingHorizontal: 32,
-        paddingBottom: 24,
-    },
-    titleRow: {
-        width: '100%',
-        height: 112,
-        marginLeft: -12,
-        gap: 8,
-    },
-    backButtonRow: {
+    body: {
         flex: 1,
-        justifyContent: 'center',
-    },
-    backButton: {
-        margin: 0,
-    },
-    titleTextRow: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    detailsTitle: {
-        color: '#000000',
-        fontWeight: 'bold',
     },
     headerInfo: {
         gap: 8,

@@ -1,6 +1,6 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Button, IconButton, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
+import DetailsNavbar from '../../components/DetailsNavbar';
 import EquipmentStatusPill from '../../components/EquipmentStatusPill';
 import type { Equipment } from '../../models/Equipment';
 import { formatPhilippineTimestamp } from '../../utils/dateTime';
@@ -29,17 +29,7 @@ function DetailRow({ label, value }: DetailRowProps) {
 export default function EquipmentDetailsScreen({ equipment, onBack, onEdit, onDelete }: EquipmentDetailsScreenProps) {
     return (
         <View style={styles.screen}>
-            <LinearGradient
-                colors={['#F59E0B', '#FFC107']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.header}
-            >
-                <View style={styles.titleRow}>
-                    <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.backButton} />
-                    <Text style={styles.detailsTitle} className="text-[1.35rem] mt-[-0.18rem]">Details</Text>
-                </View>
-            </LinearGradient>
+            <DetailsNavbar onBack={onBack} />
             <View style={styles.headerInfo}>
                 <Text className="text-2xl font-poppins-bold text-black">{equipment.title}</Text>
                 <View style={styles.subtitleRow}>
@@ -69,25 +59,6 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         backgroundColor: '#fff',
-    },
-    header: {
-        height: '36%',
-        paddingHorizontal: 32,
-        paddingTop: 48,
-        justifyContent: 'flex-start',
-    },
-    titleRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: -12,
-        gap: 8,
-    },
-    detailsTitle: {
-        color: '#000000',
-        fontWeight: 'bold',
-    },
-    backButton: {
-        margin: 0,
     },
     headerInfo: {
         gap: 8,

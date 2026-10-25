@@ -84,7 +84,7 @@ export default function QuickActionsGrid({
                       <Ionicons
                         name={action.icon}
                         size={iconSize}
-                        color="#FBBF77"
+                        color="#F59E0B"
                         style={styles.icon}
                       />
                     </View>
