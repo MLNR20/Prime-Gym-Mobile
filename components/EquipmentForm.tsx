@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Switch, Text, TextInput } from 'react-native-paper';
+import { Button, Switch, Text } from 'react-native-paper';
 import type { Equipment } from '../models/Equipment';
 import { commonStyles } from './commonStyles';
+import FormTextInput, { FormLabel } from './FormTextInput';
 
 export type EquipmentFormValues = {
     title: string;
@@ -36,10 +37,7 @@ export default function EquipmentForm({ editingEquipment, onSubmit, onCancel }: 
 
     return (
         <View style={styles.container}>
-            <Text className="text-lg font-poppins-bold">
-                {editingEquipment ? 'Edit Equipment' : 'Add Equipment'}
-            </Text>
-            <TextInput mode="outlined" style={commonStyles.inputField} label="Equipment Title" value={title} onChangeText={setTitle} />
+            <FormTextInput label="Equipment Title" value={title} onChangeText={setTitle} />
             <View style={styles.switchRow}>
                 <Text>Active</Text>
                 <Switch value={isActive} onValueChange={setIsActive} />
@@ -47,11 +45,11 @@ export default function EquipmentForm({ editingEquipment, onSubmit, onCancel }: 
 
             <View style={styles.actions}>
                 {editingEquipment && (
-                    <Button mode="text" onPress={onCancel}>
+                    <Button mode="text" textColor="#6B7280" onPress={onCancel}>
                         Cancel
                     </Button>
                 )}
-                <Button mode="contained" onPress={handleSubmit} style={commonStyles.submitButton}>
+                <Button mode="contained" textColor="#fff" contentStyle={commonStyles.submitButtonContent} onPress={handleSubmit} style={commonStyles.submitButton}>
                     {editingEquipment ? 'Save' : 'Add'}
                 </Button>
             </View>
@@ -62,7 +60,7 @@ export default function EquipmentForm({ editingEquipment, onSubmit, onCancel }: 
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        gap: 12,
+        gap: 20,
     },
     switchRow: {
         flexDirection: 'row',
@@ -71,8 +69,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 4,
     },
     actions: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
+        width: '100%',
         gap: 8,
     },
 });

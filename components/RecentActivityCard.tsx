@@ -23,7 +23,7 @@ export default function RecentActivityCard() {
                             style={[styles.row, index < entries.length - 1 && styles.rowDivider]}
                         >
                             <View style={styles.iconWrapper}>
-                                <Ionicons name="checkmark-done-outline" size={22} color="#FBBF77" />
+                                <Ionicons name="checkmark-done-outline" size={30} color="#FBBF77" />
                             </View>
                             <View style={styles.textGroup}>
                                 <Text style={styles.name} numberOfLines={1}>
@@ -50,7 +50,8 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#FFFFFF',
         borderRadius: 16,
-        padding: 16,
+        paddingHorizontal: 0,
+        paddingVertical: 6,
     },
     message: {
         color: '#6B7280',
@@ -59,17 +60,17 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
-        paddingVertical: 10,
+        gap: 20,
+        paddingVertical: 12,
     },
     rowDivider: {
         borderBottomWidth: 1,
         borderBottomColor: '#F2F5F7',
     },
     iconWrapper: {
-        width: 36,
-        height: 36,
-        borderRadius: 10,
+        width: 44,
+        height: 44,
+        borderRadius: 12,
         backgroundColor: '#F2F5F7',
         alignItems: 'center',
         justifyContent: 'center',
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
         gap: 2,
     },
     name: {
-        fontSize: 14,
+        fontSize: 14 + 0.1 * 16,
         fontWeight: 'bold',
         color: '#000000',
     },

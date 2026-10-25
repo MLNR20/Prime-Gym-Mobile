@@ -33,7 +33,7 @@ export default function BottomTabs() {
                 tabBarActiveTintColor: '#F59E0B',
                 tabBarInactiveTintColor: '#9CA3AF',
                 tabBarStyle: { height: 88, paddingTop: 8, paddingBottom: 2, marginBottom: 2 },
-                tabBarLabelStyle: { fontFamily: 'Poppins_600SemiBold', fontSize: 10, marginBottom: 0.2 * 16 },
+                tabBarLabelStyle: { fontFamily: 'Poppins_600SemiBold', fontSize: 10 + 0.01 * 16, marginTop: 0.4 * 16, marginBottom: 0.2 * 16 },
                 tabBarIcon: ({ color }) => (
                     <View style={styles.iconWrapper}>
                         <Ionicons name={ICONS[route.name]} color={color} size={ICON_SIZE} style={styles.icon} />
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     iconWrapper: {
         width: ICON_WRAPPER_SIZE,
         height: ICON_WRAPPER_SIZE,
+        marginTop: 0.01 * 16,
         marginBottom: 0.2 * 16,
         alignItems: 'center',
         justifyContent: 'center',

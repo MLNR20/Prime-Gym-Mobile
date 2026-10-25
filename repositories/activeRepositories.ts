@@ -1,8 +1,10 @@
+import type { AttendanceRecord, NewAttendanceRecord } from '../models/AttendanceRecord';
 import type { AuditLog, NewAuditLog } from '../models/AuditLog';
 import type { Contact, NewContact } from '../models/Contact';
 import type { Equipment, NewEquipment } from '../models/Equipment';
 import type { LockerKey, NewLockerKey } from '../models/LockerKey';
 import type { Member, NewMember } from '../models/Member';
+import { mirroredAttendanceRepository } from './MirroredAttendanceRepository';
 import { mirroredAuditLogRepository } from './MirroredAuditLogRepository';
 import { mirroredContactRepository } from './MirroredContactRepository';
 import { mirroredLockerKeyRepository } from './MirroredLockerKeyRepository';
@@ -21,6 +23,9 @@ export const equipmentRepository: Repository<Equipment, NewEquipment> = sqliteEq
 // Contacts and locker keys are mirrored to Firestore for a cloud backup, same as members.
 export const contactRepository: Repository<Contact, NewContact> = mirroredContactRepository;
 export const lockerKeyRepository: Repository<LockerKey, NewLockerKey> = mirroredLockerKeyRepository;
+
+// Attendance records are mirrored to Firestore too, including later edits such as filling in time_out.
+export const attendanceRepository: Repository<AttendanceRecord, NewAttendanceRecord> = mirroredAttendanceRepository;
 
 // Audit logs are mirrored to Firestore for a cloud backup, same as members, contacts and locker keys.
 export const auditLogRepository: Repository<AuditLog, NewAuditLog> = mirroredAuditLogRepository;

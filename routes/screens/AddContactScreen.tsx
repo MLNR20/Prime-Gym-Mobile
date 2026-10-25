@@ -1,7 +1,6 @@
-import { ScrollView, StyleSheet } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import ContactForm, { type ContactFormValues } from '../../components/ContactForm';
-import { dashboardScreenStyles } from '../../components/commonStyles';
+import DetailsNavbar from '../../components/DetailsNavbar';
 import type { Contact } from '../../models/Contact';
 
 type AddContactScreenProps = {
@@ -12,15 +11,22 @@ type AddContactScreenProps = {
 
 export default function AddContactScreen({ editingContact, onSubmit, onCancel }: AddContactScreenProps) {
     return (
-        <ScrollView style={dashboardScreenStyles.scrollView} contentContainerStyle={dashboardScreenStyles.content}>
-            <IconButton icon="arrow-left" onPress={onCancel} style={styles.backButton} />
-            <ContactForm editingContact={editingContact} onSubmit={onSubmit} onCancel={onCancel} />
-        </ScrollView>
+        <View style={styles.screen}>
+            <DetailsNavbar title={editingContact ? 'Edit Contact' : 'Add Contact'} onBack={onCancel} />
+            <ScrollView contentContainerStyle={styles.content}>
+                <ContactForm editingContact={editingContact} onSubmit={onSubmit} onCancel={onCancel} />
+            </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    backButton: {
-        margin: 0,
+    screen: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    content: {
+        paddingHorizontal: 32,
+        paddingVertical: 24,
     },
 });

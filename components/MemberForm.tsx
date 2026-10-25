@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, SegmentedButtons, Text, TextInput } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import type { Member, MembershipPlan } from '../models/Member';
 import { commonStyles } from './commonStyles';
+import FormSelect from './FormSelect';
+import FormTextInput from './FormTextInput';
 
-const PLANS: MembershipPlan[] = ['Basic', 'Standard', 'Premium'];
+const PLAN_OPTIONS = (['Basic', 'Standard', 'Premium'] as const).map((plan) => ({ value: plan, label: plan }));
 
 export type MemberFormValues = {
     first_name: string;
@@ -57,36 +59,29 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
 
     return (
         <View style={styles.container}>
-            <Text className="text-lg font-poppins-bold">
-                {editingMember ? 'Edit Subscriber' : 'Add Subscriber'}
-            </Text>
-            <TextInput mode="flat" style={commonStyles.inputField} label="First Name" value={firstName} onChangeText={setFirstName} />
-            <TextInput mode="outlined" style={commonStyles.inputField} label="Last Name" value={lastName} onChangeText={setLastName} />
-            <TextInput
-                mode="outlined"
-                label="Payment Date (YYYY-MM-DD)"
+            <FormTextInput label="First Name" value={firstName} onChangeText={setFirstName} />
+            <FormTextInput label="Last Name" value={lastName} onChangeText={setLastName} />
+            <FormTextInput
+                label="Payment Date"
+                placeholder="YYYY-MM-DD"
                 value={paymentDate}
                 onChangeText={setPaymentDate}
             />
-            <TextInput
-                mode="outlined"
-                label="Subscription Expiration Date (YYYY-MM-DD)"
+            <FormTextInput
+                label="Subscription Expiration Date"
+                placeholder="YYYY-MM-DD"
                 value={subscriptionExpirationDate}
                 onChangeText={setSubscriptionExpirationDate}
             />
-            <SegmentedButtons
-                value={plan}
-                onValueChange={(value) => setPlan(value as MembershipPlan)}
-                buttons={PLANS.map((planOption) => ({ value: planOption, label: planOption }))}
-            />
+            <FormSelect label="Plan" value={plan} options={PLAN_OPTIONS} onChange={setPlan} />
 
             <View style={styles.actions}>
                 {editingMember && (
-                    <Button mode="text" onPress={onCancel}>
+                    <Button mode="text" textColor="#6B7280" onPress={onCancel}>
                         Cancel
                     </Button>
                 )}
-                <Button mode="contained" onPress={handleSubmit} style={commonStyles.submitButton}>
+                <Button mode="contained" textColor="#fff" contentStyle={commonStyles.submitButtonContent} onPress={handleSubmit} style={commonStyles.submitButton}>
                     {editingMember ? 'Save' : 'Add'}
                 </Button>
             </View>
@@ -97,11 +92,10 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        gap: 12,
+        gap: 20,
     },
     actions: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
+        width: '100%',
         gap: 8,
     },
 });

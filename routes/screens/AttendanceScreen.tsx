@@ -1,47 +1,90 @@
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import AddMemberScreen from './AddMemberScreen';
-import AttendanceHeader from '../../components/AttendanceHeader';
-import type { MemberFormValues } from '../../components/MemberForm';
-import MemberListCard from '../../components/MemberListCard';
-import { commonStyles } from '../../components/commonStyles';
+import AddAttendanceScreen from './AddAttendanceScreen';
+import type { AttendanceFormValues } from '../../components/AttendanceForm';
+import AttendanceListCard from '../../components/AttendanceListCard';
+import SearchNavbar from '../../components/SearchNavbar';
 import { useAttendanceViewModel } from '../../viewmodels/useAttendanceViewModel';
 
 export default function AttendanceScreen() {
-    const { members, query, setQuery, presentMemberIds, toggleAttendance, addMember, loading, error } =
-        useAttendanceViewModel();
+    const {
+        rows,
+        members,
+        lockerKeys,
+        query,
+        setQuery,
+        loading,
+        error,
+        editingRecord,
+        startEditing,
+        cancelEditing,
+        submitRecord,
+        checkOut,
+    } = useAttendanceViewModel();
     const [isAdding, setIsAdding] = useState(false);
 
-    const handleSubmit = async (values: MemberFormValues) => {
-        await addMember(values);
+    const closeForm = () => {
+        setIsAdding(false);
+        cancelEditing();
+    };
+
+    const handleSubmit = async (values: AttendanceFormValues) => {
+        await submitRecord(values);
         setIsAdding(false);
     };
 
-    if (isAdding) {
+    if (isAdding || editingRecord) {
         return (
-            <AddMemberScreen editingMember={null} onSubmit={handleSubmit} onCancel={() => setIsAdding(false)} />
+            <AddAttendanceScreen
+                editingRecord={editingRecord}
+                members={members}
+                lockerKeys={lockerKeys}
+                onSubmit={handleSubmit}
+                onCancel={closeForm}
+            />
         );
     }
 
     return (
-        <View style={[commonStyles.scrollView, commonStyles.container]}>
-            <AttendanceHeader onAddPress={() => setIsAdding(true)} />
-            <MemberListCard
-                members={members}
+        <View style={styles.screen}>
+            <SearchNavbar
+                title="Attendance"
+                onAddPress={() => setIsAdding(true)}
+                searchPlaceholder="Search attendance"
                 query={query}
                 onQueryChange={setQuery}
-                loading={loading}
-                error={error}
-                onItemPress={(member) => toggleAttendance(member.id)}
-                renderRight={(member) => (
-                    <IconButton
-                        icon={presentMemberIds.has(member.id) ? 'check-circle' : 'circle-outline'}
-                        iconColor={presentMemberIds.has(member.id) ? '#166534' : '#5C4300'}
-                        onPress={() => toggleAttendance(member.id)}
-                    />
-                )}
             />
+            <View style={styles.content}>
+                <AttendanceListCard
+                    rows={rows}
+                    loading={loading}
+                    error={error}
+                    onItemPress={startEditing}
+                    renderRight={(row) =>
+                        row.time_out ? (
+                            <IconButton icon="check-circle" iconColor="#166534" size={22} style={styles.action} />
+                        ) : (
+                            <IconButton icon="logout" size={22} style={styles.action} onPress={() => checkOut(row)} />
+                        )
+                    }
+                />
+            </View>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    content: {
+        flex: 1,
+        paddingHorizontal: 32,
+        paddingTop: 24,
+    },
+    action: {
+        margin: 0,
+    },
+});

@@ -39,11 +39,15 @@ export const commonStyles = StyleSheet.create({
     },
     submitButton:
     {
-        width: 100,
+        width: '100%',
         backgroundColor: '#F59E0B',
         borderRadius: 8,
         textAlign: 'center',
         color: '#fff',
+    },
+    submitButtonContent:
+    {
+        height: 40 + 0.4 * 16,
     },
     searchBar:
     {
@@ -80,7 +84,7 @@ export const quickActionsGridStyles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderRadius: 16,
         paddingVertical: 16,
-        paddingHorizontal: 4,
+        paddingHorizontal: 0,
     },
     row: {
         flexDirection: 'row',

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, SegmentedButtons, Text, TextInput } from 'react-native-paper';
+import { Button, SegmentedButtons, Text } from 'react-native-paper';
 import type { Contact, ContactCategory } from '../models/Contact';
 import { commonStyles } from './commonStyles';
+import FormTextInput, { FormLabel } from './FormTextInput';
 
 const CATEGORIES: ContactCategory[] = ['Staff', 'Trainer', 'Supplier', 'Emergency', 'Other'];
 
@@ -56,41 +57,37 @@ export default function ContactForm({ editingContact, onSubmit, onCancel }: Cont
 
     return (
         <View style={styles.container}>
-            <Text className="text-lg font-poppins-bold">
-                {editingContact ? 'Edit Contact' : 'Add Contact'}
-            </Text>
-            <TextInput mode="outlined" style={commonStyles.inputField} label="Name" value={name} onChangeText={setName} />
-            <TextInput
-                mode="outlined"
-                style={commonStyles.inputField}
+            <FormTextInput label="Name" value={name} onChangeText={setName} />
+            <FormTextInput
                 label="Phone Number"
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
                 keyboardType="phone-pad"
             />
-            <TextInput
-                mode="outlined"
-                style={commonStyles.inputField}
+            <FormTextInput
                 label="Email"
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
-            <SegmentedButtons
-                value={category}
-                onValueChange={(value) => setCategory(value as ContactCategory)}
-                buttons={CATEGORIES.map((categoryOption) => ({ value: categoryOption, label: categoryOption }))}
-            />
-            <TextInput mode="outlined" style={commonStyles.inputField} label="Notes" value={notes} onChangeText={setNotes} multiline />
+            <View style={styles.group}>
+                <FormLabel>Category</FormLabel>
+                <SegmentedButtons
+                    value={category}
+                    onValueChange={(value) => setCategory(value as ContactCategory)}
+                    buttons={CATEGORIES.map((categoryOption) => ({ value: categoryOption, label: categoryOption }))}
+                />
+            </View>
+            <FormTextInput label="Notes" value={notes} onChangeText={setNotes} multiline />
 
             <View style={styles.actions}>
                 {editingContact && (
-                    <Button mode="text" onPress={onCancel}>
+                    <Button mode="text" textColor="#6B7280" onPress={onCancel}>
                         Cancel
                     </Button>
                 )}
-                <Button mode="contained" onPress={handleSubmit} style={commonStyles.submitButton}>
+                <Button mode="contained" textColor="#fff" contentStyle={commonStyles.submitButtonContent} onPress={handleSubmit} style={commonStyles.submitButton}>
                     {editingContact ? 'Save' : 'Add'}
                 </Button>
             </View>
@@ -101,11 +98,14 @@ export default function ContactForm({ editingContact, onSubmit, onCancel }: Cont
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        gap: 12,
+        gap: 20,
+    },
+    group: {
+        width: '100%',
+        gap: 6,
     },
     actions: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
+        width: '100%',
         gap: 8,
     },
 });

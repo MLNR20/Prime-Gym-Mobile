@@ -1,17 +1,19 @@
 import { useState } from "react";
-import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, View } from "react-native";
-import { IconButton, Searchbar } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import AddLockerKeyScreen from "./AddLockerKeyScreen";
 import LockerKeyDetailsScreen from "./LockerKeyDetailsScreen";
-import LabelHeaderNav from "../../components/LabelHeaderNav";
+import SearchNavbar from "../../components/SearchNavbar";
 import type { LockerKeyFormValues } from "../../components/LockerKeyForm";
 import LockerKeyListCard from "../../components/LockerKeyListCard";
-import { commonStyles } from "../../components/commonStyles";
 import type { LockerKey } from "../../models/LockerKey";
 import { useLockerKeysViewModel } from "../../viewmodels/useLockerKeysViewModel";
 
-export default function LockerKeysScreen() {
+type LockerKeysScreenProps = {
+  onBack: () => void;
+};
+
+export default function LockerKeysScreen({ onBack }: LockerKeysScreenProps) {
   const {
     lockerKeys,
     query,
@@ -66,25 +68,14 @@ export default function LockerKeysScreen() {
 
   return (
     <View style={styles.screen}>
-      <LinearGradient
-        colors={["#F59E0B", "#FFC107"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.header}
-      >
-        <LabelHeaderNav
-          label="Locker Keys"
-          onNavigate={() => setIsAdding(true)}
-        />
-        <Searchbar
-          placeholder="Search locker keys"
-          onChangeText={setQuery}
-          style={[commonStyles.searchBar, styles.searchBar]}
-          inputStyle={styles.searchInput}
-          placeholderTextColor="#9CA3AF"
-          value={query}
-        />
-      </LinearGradient>
+      <SearchNavbar
+        title="Locker Keys"
+        onBack={onBack}
+        onAddPress={() => setIsAdding(true)}
+        searchPlaceholder="Search locker keys"
+        query={query}
+        onQueryChange={setQuery}
+      />
       <View style={styles.content}>
         <View style={styles.listWrapper}>
           <LockerKeyListCard
@@ -110,24 +101,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  header: {
-    height: "28%",
-    justifyContent: "flex-end",
-    paddingHorizontal: 32,
-    paddingBottom: 24,
-    gap: 16,
-  },
   content: {
     flex: 1,
     paddingHorizontal: 32,
     paddingTop: 24,
     gap: 12,
-  },
-  searchBar: {
-    width: "100%",
-  },
-  searchInput: {
-    color: "#374151",
   },
   listWrapper: {
     width: "100%",

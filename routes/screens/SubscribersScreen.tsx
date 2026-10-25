@@ -1,17 +1,19 @@
 import { useState } from "react";
-import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, View } from "react-native";
-import { IconButton, Searchbar } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import AddMemberScreen from "./AddMemberScreen";
 import MemberDetailsScreen from "./MemberDetailsScreen";
-import LabelHeaderNav from "../../components/LabelHeaderNav";
+import SearchNavbar from "../../components/SearchNavbar";
 import type { MemberFormValues } from "../../components/MemberForm";
 import MemberListCard from "../../components/MemberListCard";
-import { commonStyles } from "../../components/commonStyles";
 import type { Member } from "../../models/Member";
 import { useSubscribersViewModel } from "../../viewmodels/useSubscribersViewModel";
 
-export default function SubscribersScreen() {
+type SubscribersScreenProps = {
+  onBack: () => void;
+};
+
+export default function SubscribersScreen({ onBack }: SubscribersScreenProps) {
   const {
     members,
     query,
@@ -66,25 +68,14 @@ export default function SubscribersScreen() {
 
   return (
     <View style={styles.screen}>
-      <LinearGradient
-        colors={["#F59E0B", "#FFC107"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.header}
-      >
-        <LabelHeaderNav
-          label="Subscribers"
-          onNavigate={() => setIsAdding(true)}
-        />
-        <Searchbar
-          placeholder="Search members"
-          onChangeText={setQuery}
-          style={[commonStyles.searchBar, styles.searchBar]}
-          inputStyle={styles.searchInput}
-          placeholderTextColor="#9CA3AF"
-          value={query}
-        />
-      </LinearGradient>
+      <SearchNavbar
+        title="Subscribers"
+        onBack={onBack}
+        onAddPress={() => setIsAdding(true)}
+        searchPlaceholder="Search members"
+        query={query}
+        onQueryChange={setQuery}
+      />
       <View style={styles.content}>
         <View style={styles.listWrapper}>
           <MemberListCard
@@ -111,24 +102,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  header: {
-    height: "28%",
-    justifyContent: "flex-end",
-    paddingHorizontal: 32,
-    paddingBottom: 24,
-    gap: 16,
-  },
   content: {
     flex: 1,
     paddingHorizontal: 32,
     paddingTop: 24,
     gap: 12,
-  },
-  searchBar: {
-    width: "100%",
-  },
-  searchInput: {
-    color: "#374151",
   },
   listWrapper: {
     width: "100%",

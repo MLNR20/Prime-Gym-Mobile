@@ -1,7 +1,6 @@
-import { ScrollView, StyleSheet } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import MemberForm, { type MemberFormValues } from '../../components/MemberForm';
-import { dashboardScreenStyles } from '../../components/commonStyles';
+import DetailsNavbar from '../../components/DetailsNavbar';
 import type { Member } from '../../models/Member';
 
 type AddMemberScreenProps = {
@@ -12,15 +11,22 @@ type AddMemberScreenProps = {
 
 export default function AddMemberScreen({ editingMember, onSubmit, onCancel }: AddMemberScreenProps) {
     return (
-        <ScrollView style={dashboardScreenStyles.scrollView} contentContainerStyle={dashboardScreenStyles.content}>
-            <IconButton icon="arrow-left" onPress={onCancel} style={styles.backButton} />
-            <MemberForm editingMember={editingMember} onSubmit={onSubmit} onCancel={onCancel} />
-        </ScrollView>
+        <View style={styles.screen}>
+            <DetailsNavbar title={editingMember ? 'Edit Subscriber' : 'Add Subscriber'} onBack={onCancel} />
+            <ScrollView contentContainerStyle={styles.content}>
+                <MemberForm editingMember={editingMember} onSubmit={onSubmit} onCancel={onCancel} />
+            </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    backButton: {
-        margin: 0,
+    screen: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    content: {
+        paddingHorizontal: 32,
+        paddingVertical: 24,
     },
 });

@@ -59,10 +59,10 @@ export default function ManageScreen() {
 
     return (
         <View style={styles.screen}>
-            {section === 'subscribers' && <SubscribersScreen />}
-            {section === 'equipment' && <EquipmentScreen />}
-            {section === 'contacts' && <ContactsScreen />}
-            {section === 'lockerKeys' && <LockerKeysScreen />}
+            {section === 'subscribers' && <SubscribersScreen onBack={() => setSection(null)} />}
+            {section === 'equipment' && <EquipmentScreen onBack={() => setSection(null)} />}
+            {section === 'contacts' && <ContactsScreen onBack={() => setSection(null)} />}
+            {section === 'lockerKeys' && <LockerKeysScreen onBack={() => setSection(null)} />}
         </View>
     );
 }

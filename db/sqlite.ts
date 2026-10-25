@@ -172,6 +172,42 @@ async function migrateAuditLogsTable(db: SQLiteDatabase): Promise<void> {
     }
 }
 
+// Columns the `attendance_records` table must have, with the DEFAULT used when backfilling a column
+// onto a table created by an earlier schema version.
+const ATTENDANCE_RECORDS_COLUMNS: [name: string, definition: string][] = [
+    ['member_id', "TEXT NOT NULL DEFAULT ''"],
+    ['locker_key_id', "TEXT NOT NULL DEFAULT ''"],
+    ['time_in', "TEXT NOT NULL DEFAULT ''"],
+    ['time_out', "TEXT NOT NULL DEFAULT ''"],
+    ['date_created', "TEXT NOT NULL DEFAULT ''"],
+    ['date_updated', "TEXT NOT NULL DEFAULT ''"],
+];
+
+function createAttendanceRecordsTableSql(table: string): string {
+    return `
+        CREATE TABLE IF NOT EXISTS ${table} (
+            id TEXT PRIMARY KEY NOT NULL,
+            member_id TEXT NOT NULL,
+            locker_key_id TEXT NOT NULL,
+            time_in TEXT NOT NULL,
+            time_out TEXT NOT NULL DEFAULT '',
+            date_created TEXT NOT NULL,
+            date_updated TEXT NOT NULL
+        );
+    `;
+}
+
+/** Backfills any columns missing from an existing `attendance_records` table (see migrateMembersTable). */
+async function migrateAttendanceRecordsTable(db: SQLiteDatabase): Promise<void> {
+    const existingColumns = await db.getAllAsync<{ name: string }>(`PRAGMA table_info(attendance_records)`);
+    const existingNames = new Set(existingColumns.map((column) => column.name));
+    for (const [name, definition] of ATTENDANCE_RECORDS_COLUMNS) {
+        if (!existingNames.has(name)) {
+            await db.execAsync(`ALTER TABLE attendance_records ADD COLUMN ${name} ${definition};`);
+        }
+    }
+}
+
 /**
  * `CREATE TABLE IF NOT EXISTS` is a no-op once the table already exists on-device, so a column
  * added to the schema after a user already has the app doesn't show up on its own — backfill any
@@ -225,6 +261,8 @@ export function getDb(): Promise<SQLiteDatabase> {
             await migrateLockerKeysTable(db);
             await db.execAsync(createAuditLogsTableSql('audit_logs'));
             await migrateAuditLogsTable(db);
+            await db.execAsync(createAttendanceRecordsTableSql('attendance_records'));
+            await migrateAttendanceRecordsTable(db);
             return db;
         });
     }

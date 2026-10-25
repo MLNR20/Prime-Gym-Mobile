@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, SegmentedButtons, Text, TextInput } from 'react-native-paper';
+import { Button, SegmentedButtons, Text } from 'react-native-paper';
 import type { LockerKey, LockerKeyStatus } from '../models/LockerKey';
 import { LOCKER_KEY_STATUSES } from '../utils/lockerKeyStatus';
 import { commonStyles } from './commonStyles';
+import FormTextInput, { FormLabel } from './FormTextInput';
 
 export type LockerKeyFormValues = {
     locker_number: string;
@@ -50,19 +51,17 @@ export default function LockerKeyForm({ editingLockerKey, onSubmit, onCancel }: 
 
     return (
         <View style={styles.container}>
-            <Text className="text-lg font-poppins-bold">
-                {editingLockerKey ? 'Edit Locker Key' : 'Add Locker Key'}
-            </Text>
-            <TextInput mode="outlined" style={commonStyles.inputField} label="Locker Number" value={lockerNumber} onChangeText={setLockerNumber} />
-            <TextInput mode="outlined" style={commonStyles.inputField} label="Key Code" value={keyCode} onChangeText={setKeyCode} />
-            <SegmentedButtons
-                value={status}
-                onValueChange={(value) => setStatus(value as LockerKeyStatus)}
-                buttons={LOCKER_KEY_STATUSES.map((statusOption) => ({ value: statusOption, label: statusOption }))}
-            />
-            <TextInput
-                mode="outlined"
-                style={commonStyles.inputField}
+            <FormTextInput label="Locker Number" value={lockerNumber} onChangeText={setLockerNumber} />
+            <FormTextInput label="Key Code" value={keyCode} onChangeText={setKeyCode} />
+            <View style={styles.group}>
+                <FormLabel>Status</FormLabel>
+                <SegmentedButtons
+                    value={status}
+                    onValueChange={(value) => setStatus(value as LockerKeyStatus)}
+                    buttons={LOCKER_KEY_STATUSES.map((statusOption) => ({ value: statusOption, label: statusOption }))}
+                />
+            </View>
+            <FormTextInput
                 label="Assigned To"
                 value={assignedTo}
                 onChangeText={setAssignedTo}
@@ -70,11 +69,11 @@ export default function LockerKeyForm({ editingLockerKey, onSubmit, onCancel }: 
 
             <View style={styles.actions}>
                 {editingLockerKey && (
-                    <Button mode="text" onPress={onCancel}>
+                    <Button mode="text" textColor="#6B7280" onPress={onCancel}>
                         Cancel
                     </Button>
                 )}
-                <Button mode="contained" onPress={handleSubmit} style={commonStyles.submitButton}>
+                <Button mode="contained" textColor="#fff" contentStyle={commonStyles.submitButtonContent} onPress={handleSubmit} style={commonStyles.submitButton}>
                     {editingLockerKey ? 'Save' : 'Add'}
                 </Button>
             </View>
@@ -85,11 +84,14 @@ export default function LockerKeyForm({ editingLockerKey, onSubmit, onCancel }: 
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        gap: 12,
+        gap: 20,
+    },
+    group: {
+        width: '100%',
+        gap: 6,
     },
     actions: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
+        width: '100%',
         gap: 8,
     },
 });
