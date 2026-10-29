@@ -39,6 +39,7 @@ export default function SearchNavbar({
                 style={[commonStyles.searchBar, styles.searchBar]}
                 inputStyle={styles.searchInput}
                 placeholderTextColor="#9CA3AF"
+                iconColor="#C4C7CC"
                 value={query}
             />
         </DetailsNavbar>

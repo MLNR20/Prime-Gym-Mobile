@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     label: {
         color: '#6B7280',
         fontSize: 12,
-        fontWeight: 'bold',
+        fontFamily: 'Poppins_700Bold',
         textAlign: 'center',
     },
 });

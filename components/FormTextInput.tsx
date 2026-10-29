@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 14,
-        fontWeight: 'bold',
+        fontFamily: 'Poppins_700Bold',
         color: '#3F2D00',
     },
     input: {

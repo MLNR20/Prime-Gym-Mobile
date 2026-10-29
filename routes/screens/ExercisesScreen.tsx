@@ -93,7 +93,7 @@ export default function ExercisesScreen({ onBack }: ExercisesScreenProps) {
             showSearchBar={false}
             onItemPress={(exercise) => setViewingExercise(exercise)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
             )}
           />
         </View>

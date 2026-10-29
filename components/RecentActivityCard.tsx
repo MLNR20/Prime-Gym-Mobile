@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     message: {
         color: '#6B7280',
         fontSize: 13,
+        fontFamily: 'Poppins_400Regular',
     },
     row: {
         flexDirection: 'row',
@@ -83,11 +84,12 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 14 + 0.1 * 16,
-        fontWeight: 'bold',
         color: '#000000',
+        fontFamily: 'Poppins_700Bold',
     },
     timestamp: {
         fontSize: 15.2,
         color: '#6B7280',
+        fontFamily: 'Poppins_400Regular',
     },
 });

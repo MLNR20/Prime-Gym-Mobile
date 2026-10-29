@@ -88,7 +88,7 @@ export default function LockerKeysScreen({ onBack }: LockerKeysScreenProps) {
             showSearchBar={false}
             onItemPress={(lockerKey) => setViewingLockerKey(lockerKey)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
             )}
           />
         </View>

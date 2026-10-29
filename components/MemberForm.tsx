@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import type { Member, MembershipPlan } from '../models/Member';
+import { inputDateToIso, isoToInputDate, maskInputDate } from '../utils/dateTime';
 import { commonStyles } from './commonStyles';
 import FormSelect from './FormSelect';
 import FormTextInput from './FormTextInput';
@@ -30,13 +31,15 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
     const [paymentAmount, setPaymentAmount] = useState('');
     const [subscriptionExpirationDate, setSubscriptionExpirationDate] = useState('');
     const [plan, setPlan] = useState<MembershipPlan>('Basic');
+    const [errors, setErrors] = useState<{ paymentDate?: string; expirationDate?: string }>({});
 
     useEffect(() => {
         setFirstName(editingMember?.first_name ?? '');
         setLastName(editingMember?.last_name ?? '');
-        setPaymentDate(editingMember?.payment_date ?? '');
+        setErrors({});
+        setPaymentDate(editingMember ? isoToInputDate(editingMember.payment_date) : '');
         setPaymentAmount(editingMember?.payment_amount ? String(editingMember.payment_amount) : '');
-        setSubscriptionExpirationDate(editingMember?.subscription_expiration_date ?? '');
+        setSubscriptionExpirationDate(editingMember ? isoToInputDate(editingMember.subscription_expiration_date) : '');
         setPlan(editingMember?.plan ?? 'Basic');
     }, [editingMember]);
 
@@ -44,12 +47,21 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
         const trimmedFirstName = firstName.trim();
         const trimmedLastName = lastName.trim();
         if (!trimmedFirstName || !trimmedLastName) return;
+        const isoPaymentDate = inputDateToIso(paymentDate);
+        const isoExpirationDate = inputDateToIso(subscriptionExpirationDate);
+        if (!isoPaymentDate || !isoExpirationDate) {
+            setErrors({
+                paymentDate: isoPaymentDate ? undefined : 'Enter a valid date as MM/DD/YYYY.',
+                expirationDate: isoExpirationDate ? undefined : 'Enter a valid date as MM/DD/YYYY.',
+            });
+            return;
+        }
         onSubmit({
             first_name: trimmedFirstName,
             last_name: trimmedLastName,
-            payment_date: paymentDate.trim(),
+            payment_date: isoPaymentDate,
             payment_amount: Number.parseFloat(paymentAmount) || 0,
-            subscription_expiration_date: subscriptionExpirationDate.trim(),
+            subscription_expiration_date: isoExpirationDate,
             plan,
         });
         if (!editingMember) {
@@ -68,9 +80,15 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
             <FormTextInput label="Last Name" value={lastName} onChangeText={setLastName} />
             <FormTextInput
                 label="Payment Date"
-                placeholder="YYYY-MM-DD"
+                placeholder="MM/DD/YYYY"
+                keyboardType="number-pad"
+                maxLength={10}
                 value={paymentDate}
-                onChangeText={setPaymentDate}
+                onChangeText={(text) => {
+                    setPaymentDate(maskInputDate(text));
+                    setErrors((current) => ({ ...current, paymentDate: undefined }));
+                }}
+                errorMessage={errors.paymentDate}
             />
             <FormTextInput
                 label="Payment Amount"
@@ -81,9 +99,15 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
             />
             <FormTextInput
                 label="Subscription Expiration Date"
-                placeholder="YYYY-MM-DD"
+                placeholder="MM/DD/YYYY"
+                keyboardType="number-pad"
+                maxLength={10}
                 value={subscriptionExpirationDate}
-                onChangeText={setSubscriptionExpirationDate}
+                onChangeText={(text) => {
+                    setSubscriptionExpirationDate(maskInputDate(text));
+                    setErrors((current) => ({ ...current, expirationDate: undefined }));
+                }}
+                errorMessage={errors.expirationDate}
             />
             <FormSelect label="Plan" value={plan} options={PLAN_OPTIONS} onChange={setPlan} />
 

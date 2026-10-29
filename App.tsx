@@ -1,7 +1,7 @@
 import './global.css';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import { PaperProvider } from 'react-native-paper';
+import { PaperProvider, configureFonts } from 'react-native-paper';
 import {
   useFonts,
   Poppins_400Regular,
@@ -11,6 +11,10 @@ import {
   Poppins_800ExtraBold,
 } from '@expo-google-fonts/poppins';
 import BottomTabs from './routes/BottomTabs';
+
+// Every react-native-paper component (text, inputs, buttons, menus) falls back to Poppins.
+// Only fonts are overridden, so Paper keeps its default colors.
+const theme = { fonts: configureFonts({ config: { fontFamily: 'Poppins_400Regular' } }) };
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -26,7 +30,7 @@ export default function App() {
   }
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={theme}>
       <NavigationContainer>
         <BottomTabs />
         <StatusBar style="dark" translucent />

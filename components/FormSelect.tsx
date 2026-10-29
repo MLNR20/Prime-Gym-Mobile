@@ -92,6 +92,6 @@ const styles = StyleSheet.create({
     },
     selectedOption: {
         color: '#F59E0B',
-        fontWeight: 'bold',
+        fontFamily: 'Poppins_700Bold',
     },
 });

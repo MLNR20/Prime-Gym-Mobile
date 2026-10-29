@@ -91,7 +91,7 @@ export default function ProgramsScreen({ onBack }: ProgramsScreenProps) {
             showSearchBar={false}
             onItemPress={(program) => setViewingProgram(program)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
             )}
           />
         </View>

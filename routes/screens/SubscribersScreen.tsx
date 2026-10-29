@@ -89,7 +89,7 @@ export default function SubscribersScreen({ onBack }: SubscribersScreenProps) {
             showSearchBar={false}
             onItemPress={(member) => setViewingMember(member)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
             )}
           />
         </View>

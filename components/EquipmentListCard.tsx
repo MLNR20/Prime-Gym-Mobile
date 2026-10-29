@@ -32,7 +32,7 @@ export default function EquipmentListCard({
     return (
         <View style={[commonStyles.listView, styles.flexFill]}>
             {showSearchBar && (
-                <Searchbar placeholder="Search equipment" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor="#9CA3AF" value={query} />
+                <Searchbar placeholder="Search equipment" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor="#9CA3AF" iconColor="#C4C7CC" value={query} />
             )}
             {loading && <ActivityIndicator style={styles.spinner} />}
             {!loading && error && (

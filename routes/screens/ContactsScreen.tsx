@@ -88,7 +88,7 @@ export default function ContactsScreen({ onBack }: ContactsScreenProps) {
             showSearchBar={false}
             onItemPress={(contact) => setViewingContact(contact)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
             )}
           />
         </View>
