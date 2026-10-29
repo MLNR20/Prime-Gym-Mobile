@@ -5,6 +5,7 @@ export type Member = {
     first_name: string;
     last_name: string;
     payment_date: string;
+    payment_amount: number;
     subscription_expiration_date: string;
     plan: MembershipPlan;
     date_created: string;

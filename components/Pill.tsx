@@ -18,7 +18,7 @@ export default function Pill({ label, variant }: PillProps) {
     const colors = VARIANT_COLORS[variant];
     return (
         <View style={[styles.pill, { backgroundColor: colors.background }]}>
-            <Text style={{ color: colors.text }} className="font-poppins-medium text-[0.775rem]">
+            <Text style={{ color: colors.text, fontFamily: 'Poppins_500Medium' }} className="font-poppins-medium text-[0.775rem]">
                 {label}
             </Text>
         </View>

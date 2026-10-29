@@ -3,7 +3,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
 import LabelHeader from '../../components/LabelHeader';
-import { dashboardScreenStyles } from '../../components/commonStyles';
+import { dashboardScreenStyles, surfaceBorder } from '../../components/commonStyles';
+import { rem } from '../../utils/rem';
 
 const OWNER = {
     name: 'Miguel Rivadenera',
@@ -38,8 +39,8 @@ function InfoRow({ icon, label, value, isLast }: InfoRowProps) {
                 <Ionicons name={icon} size={18} color="#FBBF77" />
             </View>
             <View style={styles.infoTextGroup}>
-                <Text style={styles.infoLabel}>{label}</Text>
                 <Text style={styles.infoValue}>{value}</Text>
+                <Text style={styles.infoLabel}>{label}</Text>
             </View>
         </View>
     );
@@ -48,26 +49,29 @@ function InfoRow({ icon, label, value, isLast }: InfoRowProps) {
 type ActionRowProps = {
     icon: keyof typeof Ionicons.glyphMap;
     label: string;
+    description: string;
     isLast?: boolean;
     danger?: boolean;
     onPress?: () => void;
 };
 
-function ActionRow({ icon, label, isLast, danger, onPress }: ActionRowProps) {
+function ActionRow({ icon, label, description, isLast, danger, onPress }: ActionRowProps) {
+    // The row layout lives on a plain View inside the Pressable: a style function on the Pressable itself
+    // dropped flexDirection on iOS and stacked the icon, text and chevron vertically.
     return (
-        <Pressable
-            style={({ pressed }) => [
-                styles.actionRow,
-                !isLast && styles.infoRowDivider,
-                pressed && styles.actionRowPressed,
-            ]}
-            onPress={onPress}
-        >
-            <View style={styles.iconWrapper}>
-                <Ionicons name={icon} size={18} color={danger ? '#DC2626' : '#FBBF77'} />
-            </View>
-            <Text style={[styles.actionLabel, danger && styles.actionLabelDanger]}>{label}</Text>
-            <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
+        <Pressable onPress={onPress}>
+            {({ pressed }) => (
+                <View style={[styles.actionRow, !isLast && styles.infoRowDivider, pressed && styles.actionRowPressed]}>
+                    <View style={styles.iconWrapper}>
+                        <Ionicons name={icon} size={18} color={danger ? '#DC2626' : '#FBBF77'} />
+                    </View>
+                    <View style={styles.infoTextGroup}>
+                        <Text style={[styles.actionLabel, danger && styles.actionLabelDanger]} numberOfLines={1}>{label}</Text>
+                        <Text style={styles.infoLabel} numberOfLines={1}>{description}</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
+                </View>
+            )}
         </Pressable>
     );
 }
@@ -87,7 +91,7 @@ export default function ProfileScreen() {
                     <Text className="text-xl font-poppins-bold text-black">{getInitials(OWNER.name)}</Text>
                 </View>
                 <View style={styles.identity}>
-                    <Text className="text-xl font-poppins-bold text-black">{OWNER.name}</Text>
+                    <Text style={styles.name} className="font-poppins-bold text-black">{OWNER.name}</Text>
                     <Text className="text-sm font-poppins" style={styles.role}>
                         {OWNER.role}
                     </Text>
@@ -107,9 +111,9 @@ export default function ProfileScreen() {
             <View style={styles.section}>
                 <Text className="text-lg font-poppins-bold text-black">Account</Text>
                 <View style={styles.sectionCard}>
-                    <ActionRow icon="create-outline" label="Edit Profile" />
-                    <ActionRow icon="lock-closed-outline" label="Change Password" />
-                    <ActionRow icon="log-out-outline" label="Log Out" danger isLast />
+                    <ActionRow icon="create-outline" label="Edit Profile" description="Update your details" />
+                    <ActionRow icon="lock-closed-outline" label="Change Password" description="Keep your account secure" />
+                    <ActionRow icon="log-out-outline" label="Log Out" description="Sign out of this device" danger isLast />
                 </View>
             </View>
         </ScrollView>
@@ -135,7 +139,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     identity: {
+        flexShrink: 1,
         gap: 2,
+    },
+    name: {
+        fontSize: rem(1.35),
+        fontFamily: 'Poppins_700Bold',
+        color: '#000000',
     },
     role: {
         color: '#5a3f00',
@@ -149,23 +159,25 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#FFFFFF',
         borderRadius: 16,
-        padding: 16,
+        paddingHorizontal: 0,
+        paddingVertical: 6,
     },
     infoRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
-        paddingVertical: 10,
+        gap: 20,
+        paddingVertical: 12,
     },
     infoRowDivider: {
         borderBottomWidth: 1,
         borderBottomColor: '#F2F5F7',
     },
     iconWrapper: {
-        width: 36,
-        height: 36,
-        borderRadius: 10,
+        width: 44,
+        height: 44,
+        borderRadius: 12,
         backgroundColor: '#F2F5F7',
+        ...surfaceBorder,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -174,28 +186,28 @@ const styles = StyleSheet.create({
         gap: 2,
     },
     infoLabel: {
-        fontSize: 12,
+        fontSize: rem(0.95),
         color: '#6B7280',
+        fontFamily: 'Poppins_400Regular',
     },
     infoValue: {
-        fontSize: 14,
-        fontWeight: 'bold',
+        fontSize: rem(0.975),
         color: '#000000',
+        fontFamily: 'Poppins_700Bold',
     },
     actionRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
+        gap: 20,
         paddingVertical: 12,
     },
     actionRowPressed: {
         opacity: 0.7,
     },
     actionLabel: {
-        flex: 1,
-        fontSize: 14,
-        fontWeight: 'bold',
+        fontSize: rem(0.975),
         color: '#000000',
+        fontFamily: 'Poppins_700Bold',
     },
     actionLabelDanger: {
         color: '#DC2626',

@@ -12,7 +12,7 @@ type AddLockerKeyScreenProps = {
 export default function AddLockerKeyScreen({ editingLockerKey, onSubmit, onCancel }: AddLockerKeyScreenProps) {
     return (
         <View style={styles.screen}>
-            <DetailsNavbar title={editingLockerKey ? 'Edit Locker Key' : 'Add Locker Key'} onBack={onCancel} />
+            <DetailsNavbar title={editingLockerKey ? 'Edit Locker Key' : 'Add Locker Key'} onBack={onCancel} bordered={false} />
             <ScrollView contentContainerStyle={styles.content}>
                 <LockerKeyForm editingLockerKey={editingLockerKey} onSubmit={onSubmit} onCancel={onCancel} />
             </ScrollView>

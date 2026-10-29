@@ -1,6 +1,17 @@
 import { StyleSheet } from 'react-native';
 
+/** Border shared by every gray-filled surface (cards, search bars, icon tiles). */
+export const surfaceBorder = {
+    borderWidth: 2,
+    borderColor: '#EDF0F2',
+} as const;
+
 export const commonStyles = StyleSheet.create({
+    /** Title text on every list card (subscriber, contact, equipment, ...). */
+    cardTitle: {
+        color: '#000000',
+        fontFamily: 'Poppins_800ExtraBold',
+    },
     container: {
         flex: 1,
         alignItems: 'flex-start',
@@ -33,6 +44,7 @@ export const commonStyles = StyleSheet.create({
     cardForListView:
     {
         backgroundColor: '#F2F5F7',
+        ...surfaceBorder,
         borderRadius: 8,
         paddingHorizontal: 16,
         paddingVertical: 10,
@@ -53,7 +65,8 @@ export const commonStyles = StyleSheet.create({
     {
         width: '100%',
         borderRadius: 8,
-        backgroundColor: '#F2F5F7'
+        backgroundColor: '#F2F5F7',
+        ...surfaceBorder,
     }
 });
 
@@ -120,6 +133,7 @@ export const quickActionsGridStyles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 12,
         backgroundColor: '#F2F5F7',
+        ...surfaceBorder,
         alignItems: 'center',
         justifyContent: 'center',
     },

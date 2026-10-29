@@ -17,18 +17,15 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.primegym",
-      "androidStatusBar": {
-        "translucent": true,
-        "backgroundColor": "#00000000"
-      }
+      "package": "com.anonymous.primegym"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-sqlite",
-      "expo-font"
+      "expo-font",
+      "expo-status-bar"
     ]
   }
 }

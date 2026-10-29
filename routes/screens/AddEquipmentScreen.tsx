@@ -12,7 +12,7 @@ type AddEquipmentScreenProps = {
 export default function AddEquipmentScreen({ editingEquipment, onSubmit, onCancel }: AddEquipmentScreenProps) {
     return (
         <View style={styles.screen}>
-            <DetailsNavbar title={editingEquipment ? 'Edit Equipment' : 'Add Equipment'} onBack={onCancel} />
+            <DetailsNavbar title={editingEquipment ? 'Edit Equipment' : 'Add Equipment'} onBack={onCancel} bordered={false} />
             <ScrollView contentContainerStyle={styles.content}>
                 <EquipmentForm editingEquipment={editingEquipment} onSubmit={onSubmit} onCancel={onCancel} />
             </ScrollView>

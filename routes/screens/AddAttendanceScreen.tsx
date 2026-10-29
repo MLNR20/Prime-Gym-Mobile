@@ -22,7 +22,7 @@ export default function AddAttendanceScreen({
 }: AddAttendanceScreenProps) {
     return (
         <View style={styles.screen}>
-            <DetailsNavbar title={editingRecord ? 'Edit Attendance' : 'Add Attendance'} onBack={onCancel} />
+            <DetailsNavbar title={editingRecord ? 'Edit Attendance' : 'Add Attendance'} onBack={onCancel} bordered={false} />
             <ScrollView contentContainerStyle={styles.content}>
                 <AttendanceForm
                     editingRecord={editingRecord}

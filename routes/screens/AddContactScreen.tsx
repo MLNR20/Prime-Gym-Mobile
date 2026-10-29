@@ -12,7 +12,7 @@ type AddContactScreenProps = {
 export default function AddContactScreen({ editingContact, onSubmit, onCancel }: AddContactScreenProps) {
     return (
         <View style={styles.screen}>
-            <DetailsNavbar title={editingContact ? 'Edit Contact' : 'Add Contact'} onBack={onCancel} />
+            <DetailsNavbar title={editingContact ? 'Edit Contact' : 'Add Contact'} onBack={onCancel} bordered={false} />
             <ScrollView contentContainerStyle={styles.content}>
                 <ContactForm editingContact={editingContact} onSubmit={onSubmit} onCancel={onCancel} />
             </ScrollView>

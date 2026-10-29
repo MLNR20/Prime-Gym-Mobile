@@ -72,6 +72,7 @@ export default function LockerKeysScreen({ onBack }: LockerKeysScreenProps) {
         title="Locker Keys"
         onBack={onBack}
         onAddPress={() => setIsAdding(true)}
+        onBellPress={() => {}}
         searchPlaceholder="Search locker keys"
         query={query}
         onQueryChange={setQuery}

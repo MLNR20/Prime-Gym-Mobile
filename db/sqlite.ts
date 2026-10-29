@@ -9,6 +9,7 @@ const MEMBERS_COLUMNS: [name: string, definition: string][] = [
     ['first_name', "TEXT NOT NULL DEFAULT ''"],
     ['last_name', "TEXT NOT NULL DEFAULT ''"],
     ['payment_date', "TEXT NOT NULL DEFAULT ''"],
+    ['payment_amount', 'REAL NOT NULL DEFAULT 0'],
     ['subscription_expiration_date', "TEXT NOT NULL DEFAULT ''"],
     ['plan', "TEXT NOT NULL DEFAULT 'Basic'"],
     ['date_created', "TEXT NOT NULL DEFAULT ''"],
@@ -23,6 +24,7 @@ function createMembersTableSql(table: string): string {
             first_name TEXT NOT NULL,
             last_name TEXT NOT NULL,
             payment_date TEXT NOT NULL,
+            payment_amount REAL NOT NULL DEFAULT 0,
             subscription_expiration_date TEXT NOT NULL,
             plan TEXT NOT NULL,
             date_created TEXT NOT NULL,
@@ -208,6 +210,75 @@ async function migrateAttendanceRecordsTable(db: SQLiteDatabase): Promise<void> 
     }
 }
 
+// Columns the `programs` table must have, with the DEFAULT used when backfilling a column
+// onto a table created by an earlier schema version.
+const PROGRAMS_COLUMNS: [name: string, definition: string][] = [
+    ['name', "TEXT NOT NULL DEFAULT ''"],
+    ['description', "TEXT NOT NULL DEFAULT ''"],
+    ['date_created', "TEXT NOT NULL DEFAULT ''"],
+    ['date_updated', "TEXT NOT NULL DEFAULT ''"],
+];
+
+function createProgramsTableSql(table: string): string {
+    return `
+        CREATE TABLE IF NOT EXISTS ${table} (
+            id TEXT PRIMARY KEY NOT NULL,
+            name TEXT NOT NULL,
+            description TEXT NOT NULL,
+            date_created TEXT NOT NULL,
+            date_updated TEXT NOT NULL
+        );
+    `;
+}
+
+/** Backfills any columns missing from an existing `programs` table (see migrateMembersTable). */
+async function migrateProgramsTable(db: SQLiteDatabase): Promise<void> {
+    const existingColumns = await db.getAllAsync<{ name: string }>(`PRAGMA table_info(programs)`);
+    const existingNames = new Set(existingColumns.map((column) => column.name));
+    for (const [name, definition] of PROGRAMS_COLUMNS) {
+        if (!existingNames.has(name)) {
+            await db.execAsync(`ALTER TABLE programs ADD COLUMN ${name} ${definition};`);
+        }
+    }
+}
+
+// Columns the `exercises` table must have, with the DEFAULT used when backfilling a column
+// onto a table created by an earlier schema version. `program_id` is '' while an exercise isn't
+// assigned to a program (an exercise belongs to at most one program).
+const EXERCISES_COLUMNS: [name: string, definition: string][] = [
+    ['name', "TEXT NOT NULL DEFAULT ''"],
+    ['description', "TEXT NOT NULL DEFAULT ''"],
+    ['muscle_group', "TEXT NOT NULL DEFAULT 'Other'"],
+    ['program_id', "TEXT NOT NULL DEFAULT ''"],
+    ['date_created', "TEXT NOT NULL DEFAULT ''"],
+    ['date_updated', "TEXT NOT NULL DEFAULT ''"],
+];
+
+function createExercisesTableSql(table: string): string {
+    return `
+        CREATE TABLE IF NOT EXISTS ${table} (
+            id TEXT PRIMARY KEY NOT NULL,
+            name TEXT NOT NULL,
+            description TEXT NOT NULL,
+            muscle_group TEXT NOT NULL,
+            program_id TEXT NOT NULL DEFAULT '',
+            date_created TEXT NOT NULL,
+            date_updated TEXT NOT NULL
+        );
+    `;
+}
+
+/** Backfills any columns missing from an existing `exercises` table (see migrateMembersTable). */
+async function migrateExercisesTable(db: SQLiteDatabase): Promise<void> {
+    const existingColumns = await db.getAllAsync<{ name: string }>(`PRAGMA table_info(exercises)`);
+    const existingNames = new Set(existingColumns.map((column) => column.name));
+    for (const [name, definition] of EXERCISES_COLUMNS) {
+        if (!existingNames.has(name)) {
+            await db.execAsync(`ALTER TABLE exercises ADD COLUMN ${name} ${definition};`);
+        }
+    }
+}
+
 /**
  * `CREATE TABLE IF NOT EXISTS` is a no-op once the table already exists on-device, so a column
  * added to the schema after a user already has the app doesn't show up on its own — backfill any
@@ -238,8 +309,8 @@ async function migrateMembersTable(db: SQLiteDatabase): Promise<void> {
         BEGIN;
         DROP TABLE IF EXISTS members_new;
         ${createMembersTableSql('members_new')}
-        INSERT INTO members_new (id, first_name, last_name, payment_date, subscription_expiration_date, plan, date_created, date_updated, is_deleted)
-        SELECT id, ${firstName}, ${lastName}, payment_date, subscription_expiration_date, plan, date_created, date_updated, is_deleted
+        INSERT INTO members_new (id, first_name, last_name, payment_date, payment_amount, subscription_expiration_date, plan, date_created, date_updated, is_deleted)
+        SELECT id, ${firstName}, ${lastName}, payment_date, payment_amount, subscription_expiration_date, plan, date_created, date_updated, is_deleted
         FROM members;
         DROP TABLE members;
         ALTER TABLE members_new RENAME TO members;
@@ -263,6 +334,10 @@ export function getDb(): Promise<SQLiteDatabase> {
             await migrateAuditLogsTable(db);
             await db.execAsync(createAttendanceRecordsTableSql('attendance_records'));
             await migrateAttendanceRecordsTable(db);
+            await db.execAsync(createProgramsTableSql('programs'));
+            await migrateProgramsTable(db);
+            await db.execAsync(createExercisesTableSql('exercises'));
+            await migrateExercisesTable(db);
             return db;
         });
     }

@@ -43,6 +43,7 @@ function generateId() {
 }
 
 const PLANS = ['Basic', 'Standard', 'Premium'];
+const PLAN_AMOUNTS = { Basic: 500, Standard: 800, Premium: 1200 };
 
 const SUBSCRIBERS = [
     ['Juan', 'Dela Cruz'],
@@ -71,6 +72,7 @@ const members = SUBSCRIBERS.map(([firstName, lastName], index) => {
         first_name: firstName,
         last_name: lastName,
         payment_date: dateOnly(paymentDate),
+        payment_amount: PLAN_AMOUNTS[PLANS[index % PLANS.length]],
         subscription_expiration_date: dateOnly(expirationDate),
         plan: PLANS[index % PLANS.length],
         date_created: createdTimestamp,

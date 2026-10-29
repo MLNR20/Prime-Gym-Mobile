@@ -70,7 +70,6 @@ export default function QuickActionsGrid({
                 <Pressable
                   style={styles.pressable}
                   onPress={() => onPress?.(action.key)}
-                  android_ripple={null}
                 >
                   <View style={styles.item}>
                   <View style={styles.iconContainer}>

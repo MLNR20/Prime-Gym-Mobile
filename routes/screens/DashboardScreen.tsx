@@ -15,6 +15,15 @@ export default function DashboardScreen() {
         if (key === 'members') {
             navigateToManage('subscribers');
         }
+        if (key === 'exercise') {
+            navigateToManage('exercises');
+        }
+        if (key === 'finance') {
+            navigateToManage('finance');
+        }
+        if (key === 'reports') {
+            navigateToManage('reports');
+        }
         if (key === 'equipment') {
             navigateToManage('equipment');
         }

@@ -8,6 +8,7 @@ import {
   Poppins_500Medium,
   Poppins_600SemiBold,
   Poppins_700Bold,
+  Poppins_800ExtraBold,
 } from '@expo-google-fonts/poppins';
 import BottomTabs from './routes/BottomTabs';
 
@@ -17,6 +18,7 @@ export default function App() {
     Poppins_500Medium,
     Poppins_600SemiBold,
     Poppins_700Bold,
+    Poppins_800ExtraBold,
   });
 
   if (!fontsLoaded) {

@@ -72,6 +72,7 @@ export default function EquipmentScreen({ onBack }: EquipmentScreenProps) {
         title="Equipment"
         onBack={onBack}
         onAddPress={() => setIsAdding(true)}
+        onBellPress={() => {}}
         searchPlaceholder="Search equipment"
         query={query}
         onQueryChange={setQuery}

@@ -76,7 +76,7 @@ export default function MemberListCard({
                                     </View>
                                 )}
                                 titleStyle={styles.itemTitle}
-                                style={commonStyles.cardForListView}
+                                style={[commonStyles.cardForListView, styles.itemCard]}
                                 onPress={onItemPress ? () => onItemPress(member) : undefined}
                                 right={renderRight ? () => renderRight(member) : undefined}
                             />
@@ -95,6 +95,11 @@ export default function MemberListCard({
 }
 
 const styles = StyleSheet.create({
+    itemCard: {
+        backgroundColor: '#F2F5F7', // same as the search bar
+        borderWidth: 2,
+        borderColor: '#EDF0F2',
+    },
     flexFill: {
         flex: 1,
     },
@@ -111,10 +116,7 @@ const styles = StyleSheet.create({
     heading: {
         color: '#3F2D00',
     },
-    itemTitle: {
-        color: '#3F2D00',
-        fontWeight: 'bold',
-    },
+    itemTitle: commonStyles.cardTitle,
     itemDescription: {
         color: '#5C4300',
     },

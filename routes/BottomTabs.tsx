@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import DashboardScreen from './screens/DashboardScreen';
-import AttendanceScreen from './screens/AttendanceScreen';
 import ManageScreen from './screens/ManageScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -13,7 +12,6 @@ type IconName = ComponentProps<typeof Ionicons>['name'];
 
 const ICONS: Record<string, IconName> = {
     Dashboard: 'grid-outline',
-    Attendance: 'calendar-outline',
     Manage: 'briefcase-outline',
     Profile: 'person-outline',
     Settings: 'settings-outline',
@@ -42,7 +40,6 @@ export default function BottomTabs() {
             })}
         >
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
-            <Tab.Screen name="Attendance" component={AttendanceScreen} />
             <Tab.Screen name="Manage" component={ManageScreen} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
             <Tab.Screen name="Settings" component={SettingsScreen} />

@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRecentActivityViewModel } from '../viewmodels/useRecentActivityViewModel';
+import { surfaceBorder } from './commonStyles';
 import { formatPhilippineTimestamp } from '../utils/dateTime';
 
 export default function RecentActivityCard() {
@@ -72,6 +73,7 @@ const styles = StyleSheet.create({
         height: 44,
         borderRadius: 12,
         backgroundColor: '#F2F5F7',
+        ...surfaceBorder,
         alignItems: 'center',
         justifyContent: 'center',
     },

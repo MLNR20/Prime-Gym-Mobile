@@ -7,6 +7,8 @@ type SearchNavbarProps = {
     title: string;
     onBack?: () => void;
     onAddPress: () => void;
+    // When provided, a circled bell appears to the left of the + button.
+    onBellPress?: () => void;
     searchPlaceholder: string;
     query: string;
     onQueryChange: (query: string) => void;
@@ -17,12 +19,20 @@ export default function SearchNavbar({
     title,
     onBack,
     onAddPress,
+    onBellPress,
     searchPlaceholder,
     query,
     onQueryChange,
 }: SearchNavbarProps) {
     return (
-        <DetailsNavbar title={title} onBack={onBack} rightIcon="plus" onRightPress={onAddPress}>
+        <DetailsNavbar
+            title={title}
+            onBack={onBack}
+            rightIcon="plus"
+            onRightPress={onAddPress}
+            showBell={!!onBellPress}
+            onBellPress={onBellPress}
+        >
             <Searchbar
                 placeholder={searchPlaceholder}
                 onChangeText={onQueryChange}
@@ -38,6 +48,8 @@ export default function SearchNavbar({
 const styles = StyleSheet.create({
     searchBar: {
         marginTop: 16,
+        borderWidth: 2,
+        borderColor: '#EDF0F2',
     },
     searchInput: {
         color: '#374151',

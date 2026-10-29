@@ -2,13 +2,17 @@ import type { AttendanceRecord, NewAttendanceRecord } from '../models/Attendance
 import type { AuditLog, NewAuditLog } from '../models/AuditLog';
 import type { Contact, NewContact } from '../models/Contact';
 import type { Equipment, NewEquipment } from '../models/Equipment';
+import type { Exercise, NewExercise } from '../models/Exercise';
 import type { LockerKey, NewLockerKey } from '../models/LockerKey';
 import type { Member, NewMember } from '../models/Member';
+import type { NewProgram, Program } from '../models/Program';
 import { mirroredAttendanceRepository } from './MirroredAttendanceRepository';
 import { mirroredAuditLogRepository } from './MirroredAuditLogRepository';
 import { mirroredContactRepository } from './MirroredContactRepository';
+import { mirroredExerciseRepository } from './MirroredExerciseRepository';
 import { mirroredLockerKeyRepository } from './MirroredLockerKeyRepository';
 import { mirroredMemberRepository } from './MirroredMemberRepository';
+import { mirroredProgramRepository } from './MirroredProgramRepository';
 import type { Repository } from './Repository';
 import { sqliteEquipmentRepository } from './SqliteEquipmentRepository';
 
@@ -29,3 +33,7 @@ export const attendanceRepository: Repository<AttendanceRecord, NewAttendanceRec
 
 // Audit logs are mirrored to Firestore for a cloud backup, same as members, contacts and locker keys.
 export const auditLogRepository: Repository<AuditLog, NewAuditLog> = mirroredAuditLogRepository;
+
+// Exercises and programs are mirrored to Firestore for a cloud backup, including updates and removals.
+export const exerciseRepository: Repository<Exercise, NewExercise> = mirroredExerciseRepository;
+export const programRepository: Repository<Program, NewProgram> = mirroredProgramRepository;

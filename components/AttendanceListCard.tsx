@@ -69,10 +69,7 @@ const styles = StyleSheet.create({
     listItems: {
         gap: 12,
     },
-    itemTitle: {
-        color: '#3F2D00',
-        fontWeight: 'bold',
-    },
+    itemTitle: commonStyles.cardTitle,
     details: {
         marginTop: 6,
         gap: 2,

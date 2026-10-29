@@ -12,7 +12,7 @@ type AddMemberScreenProps = {
 export default function AddMemberScreen({ editingMember, onSubmit, onCancel }: AddMemberScreenProps) {
     return (
         <View style={styles.screen}>
-            <DetailsNavbar title={editingMember ? 'Edit Subscriber' : 'Add Subscriber'} onBack={onCancel} />
+            <DetailsNavbar title={editingMember ? 'Edit Subscriber' : 'Add Subscriber'} onBack={onCancel} bordered={false} />
             <ScrollView contentContainerStyle={styles.content}>
                 <MemberForm editingMember={editingMember} onSubmit={onSubmit} onCancel={onCancel} />
             </ScrollView>
