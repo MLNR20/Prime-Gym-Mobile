@@ -4,6 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import DashboardScreen from './screens/DashboardScreen';
+import { useUnreadNotificationCount } from '../viewmodels/useNotificationsViewModel';
+import InboxScreen from './screens/InboxScreen';
 import ManageScreen from './screens/ManageScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -13,6 +15,7 @@ type IconName = ComponentProps<typeof Ionicons>['name'];
 const ICONS: Record<string, IconName> = {
     Dashboard: 'grid-outline',
     Manage: 'briefcase-outline',
+    Inbox: 'mail-outline',
     Profile: 'person-outline',
     Settings: 'settings-outline',
 };
@@ -24,6 +27,8 @@ const ICON_SIZE = 56 * 0.6 - 0.1 * 16;
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
+    const unreadCount = useUnreadNotificationCount();
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -41,6 +46,14 @@ export default function BottomTabs() {
         >
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
             <Tab.Screen name="Manage" component={ManageScreen} />
+            <Tab.Screen
+                name="Inbox"
+                component={InboxScreen}
+                options={{
+                    tabBarBadge: unreadCount > 0 ? unreadCount : undefined,
+                    tabBarBadgeStyle: { backgroundColor: '#F59E0B', color: '#000000', fontFamily: 'Poppins_600SemiBold' },
+                }}
+            />
             <Tab.Screen name="Profile" component={ProfileScreen} />
             <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator>

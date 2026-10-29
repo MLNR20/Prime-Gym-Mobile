@@ -5,6 +5,7 @@ import { Button } from 'react-native-paper';
 import LabelHeader from '../../components/LabelHeader';
 import { dashboardScreenStyles, surfaceBorder } from '../../components/commonStyles';
 import { rem } from '../../utils/rem';
+import { signOutUser } from '../../viewmodels/useAuthViewModel';
 
 const OWNER = {
     name: 'Miguel Rivadenera',
@@ -113,7 +114,7 @@ export default function ProfileScreen() {
                 <View style={styles.sectionCard}>
                     <ActionRow icon="create-outline" label="Edit Profile" description="Update your details" />
                     <ActionRow icon="lock-closed-outline" label="Change Password" description="Keep your account secure" />
-                    <ActionRow icon="log-out-outline" label="Log Out" description="Sign out of this device" danger isLast />
+                    <ActionRow icon="log-out-outline" label="Log Out" description="Sign out of this device" danger isLast onPress={signOutUser} />
                 </View>
             </View>
         </ScrollView>

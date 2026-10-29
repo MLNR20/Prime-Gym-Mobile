@@ -26,7 +26,7 @@ function SettingsRow({ icon, label, description, isLast, trailing, onPress }: Se
             {({ pressed }) => (
                 <View style={[styles.row, !isLast && styles.rowDivider, pressed && styles.rowPressed]}>
                     <View style={styles.iconWrapper}>
-                        <Ionicons name={icon} size={22} color="#FBBF77" />
+                        <Ionicons name={icon} size={18} color="#FBBF77" />
                     </View>
                     <View style={styles.textGroup}>
                         <Text style={styles.label} numberOfLines={1}>{label}</Text>

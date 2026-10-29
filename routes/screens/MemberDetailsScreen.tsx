@@ -4,7 +4,7 @@ import DetailsScreenLayout from '../../components/DetailsScreenLayout';
 import MemberStatusPill from '../../components/MemberStatusPill';
 import type { Member } from '../../models/Member';
 import { formatPeso } from '../../utils/currency';
-import { formatDateOnly, formatPhilippineTimestamp } from '../../utils/dateTime';
+import { formatDateOnly, formatPhilippineDate, formatPhilippineTimestamp } from '../../utils/dateTime';
 import { useMemberAttendanceViewModel } from '../../viewmodels/useMemberAttendanceViewModel';
 
 type MemberDetailsScreenProps = {
@@ -34,8 +34,8 @@ export default function MemberDetailsScreen({ member, onBack, onEdit, onDelete }
                     { label: 'Payment Date', value: formatDateOnly(member.payment_date) },
                     { label: 'Payment Amount', value: formatPeso(member.payment_amount ?? 0) },
                     { label: 'Subscription Expiration', value: formatDateOnly(member.subscription_expiration_date) },
-                    { label: 'Date Created', value: formatPhilippineTimestamp(member.date_created) },
-                    { label: 'Date Updated', value: formatPhilippineTimestamp(member.date_updated) },
+                    { label: 'Date Created', value: formatPhilippineDate(member.date_created) },
+                    { label: 'Date Updated', value: formatPhilippineDate(member.date_updated) },
                 ]}
             />
             <DetailSection

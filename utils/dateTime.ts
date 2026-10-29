@@ -60,6 +60,13 @@ export function formatPhilippineTimestamp(isoTimestamp: string): string {
     }).format(date);
 }
 
+/** Formats an ISO timestamp as a date only, in Philippine Standard Time, e.g. "Sep 5, 2026". */
+export function formatPhilippineDate(isoTimestamp: string): string {
+    const date = new Date(isoTimestamp);
+    if (Number.isNaN(date.getTime())) return isoTimestamp;
+    return new Intl.DateTimeFormat('en-PH', { timeZone: PHILIPPINE_TIME_ZONE, dateStyle: 'medium' }).format(date);
+}
+
 /** Formats a plain "YYYY-MM-DD" date (no time component) for display, e.g. "Sep 5, 2026". */
 export function formatDateOnly(dateString: string): string {
     const date = new Date(dateString);

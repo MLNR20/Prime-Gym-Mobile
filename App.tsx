@@ -11,6 +11,8 @@ import {
   Poppins_800ExtraBold,
 } from '@expo-google-fonts/poppins';
 import BottomTabs from './routes/BottomTabs';
+import LoginScreen from './routes/screens/LoginScreen';
+import { useAuthUser } from './viewmodels/useAuthViewModel';
 
 // Every react-native-paper component (text, inputs, buttons, menus) falls back to Poppins.
 // Only fonts are overridden, so Paper keeps its default colors.
@@ -25,16 +27,24 @@ export default function App() {
     Poppins_800ExtraBold,
   });
 
-  if (!fontsLoaded) {
+  const { user, initializing } = useAuthUser();
+
+  // Wait for fonts and for Firebase to restore a saved session, so a signed-in user never sees a login flash.
+  if (!fontsLoaded || initializing) {
     return null;
   }
 
   return (
     <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <BottomTabs />
-        <StatusBar style="dark" translucent />
-      </NavigationContainer>
+      {user ? (
+        <NavigationContainer>
+          <BottomTabs />
+        </NavigationContainer>
+      ) : (
+        <LoginScreen />
+      )}
+      <StatusBar style="dark" translucent />
+
     </PaperProvider>
   );
 }

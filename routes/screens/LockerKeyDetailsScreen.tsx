@@ -3,7 +3,7 @@ import DetailsHeader from '../../components/DetailsHeader';
 import DetailsScreenLayout from '../../components/DetailsScreenLayout';
 import LockerKeyStatusPill from '../../components/LockerKeyStatusPill';
 import type { LockerKey } from '../../models/LockerKey';
-import { formatPhilippineTimestamp } from '../../utils/dateTime';
+import { formatPhilippineDate } from '../../utils/dateTime';
 
 type LockerKeyDetailsScreenProps = {
     lockerKey: LockerKey;
@@ -25,8 +25,8 @@ export default function LockerKeyDetailsScreen({ lockerKey, onBack, onEdit, onDe
                 description="Key and assignment details for this locker."
                 rows={[
                     { label: 'Assigned To', value: lockerKey.assigned_to || '—', fullWidth: true },
-                    { label: 'Date Created', value: formatPhilippineTimestamp(lockerKey.date_created) },
-                    { label: 'Date Updated', value: formatPhilippineTimestamp(lockerKey.date_updated) },
+                    { label: 'Date Created', value: formatPhilippineDate(lockerKey.date_created) },
+                    { label: 'Date Updated', value: formatPhilippineDate(lockerKey.date_updated) },
                 ]}
             />
         </DetailsScreenLayout>

@@ -72,7 +72,6 @@ export default function ContactsScreen({ onBack }: ContactsScreenProps) {
         title="Contacts"
         onBack={onBack}
         onAddPress={() => setIsAdding(true)}
-        onBellPress={() => {}}
         searchPlaceholder="Search contacts"
         query={query}
         onQueryChange={setQuery}

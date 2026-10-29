@@ -3,7 +3,7 @@ import DetailsHeader from '../../components/DetailsHeader';
 import DetailsScreenLayout from '../../components/DetailsScreenLayout';
 import ExerciseProgramPill from '../../components/ExerciseProgramPill';
 import type { Exercise } from '../../models/Exercise';
-import { formatPhilippineTimestamp } from '../../utils/dateTime';
+import { formatPhilippineDate } from '../../utils/dateTime';
 
 type ExerciseDetailsScreenProps = {
     exercise: Exercise;
@@ -28,8 +28,8 @@ export default function ExerciseDetailsScreen({ exercise, programName, onBack, o
                 rows={[
                     { label: 'Program', value: programName || '—', fullWidth: true },
                     { label: 'Description', value: exercise.description || '—', fullWidth: true },
-                    { label: 'Date Created', value: formatPhilippineTimestamp(exercise.date_created) },
-                    { label: 'Date Updated', value: formatPhilippineTimestamp(exercise.date_updated) },
+                    { label: 'Date Created', value: formatPhilippineDate(exercise.date_created) },
+                    { label: 'Date Updated', value: formatPhilippineDate(exercise.date_updated) },
                 ]}
             />
         </DetailsScreenLayout>

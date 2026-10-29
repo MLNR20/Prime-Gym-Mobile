@@ -279,6 +279,40 @@ async function migrateExercisesTable(db: SQLiteDatabase): Promise<void> {
     }
 }
 
+// Columns the `notifications` table must have, with the DEFAULT used when backfilling a column
+// onto a table created by an earlier schema version.
+const NOTIFICATIONS_COLUMNS: [name: string, definition: string][] = [
+    ['header', "TEXT NOT NULL DEFAULT ''"],
+    ['subheader', "TEXT NOT NULL DEFAULT ''"],
+    ['is_read', 'INTEGER NOT NULL DEFAULT 0'],
+    ['date_created', "TEXT NOT NULL DEFAULT ''"],
+    ['date_updated', "TEXT NOT NULL DEFAULT ''"],
+];
+
+function createNotificationsTableSql(table: string): string {
+    return `
+        CREATE TABLE IF NOT EXISTS ${table} (
+            id TEXT PRIMARY KEY NOT NULL,
+            header TEXT NOT NULL,
+            subheader TEXT NOT NULL,
+            is_read INTEGER NOT NULL DEFAULT 0,
+            date_created TEXT NOT NULL,
+            date_updated TEXT NOT NULL
+        );
+    `;
+}
+
+/** Backfills any columns missing from an existing `notifications` table (see migrateMembersTable). */
+async function migrateNotificationsTable(db: SQLiteDatabase): Promise<void> {
+    const existingColumns = await db.getAllAsync<{ name: string }>(`PRAGMA table_info(notifications)`);
+    const existingNames = new Set(existingColumns.map((column) => column.name));
+    for (const [name, definition] of NOTIFICATIONS_COLUMNS) {
+        if (!existingNames.has(name)) {
+            await db.execAsync(`ALTER TABLE notifications ADD COLUMN ${name} ${definition};`);
+        }
+    }
+}
+
 /**
  * `CREATE TABLE IF NOT EXISTS` is a no-op once the table already exists on-device, so a column
  * added to the schema after a user already has the app doesn't show up on its own — backfill any
@@ -338,6 +372,8 @@ export function getDb(): Promise<SQLiteDatabase> {
             await migrateProgramsTable(db);
             await db.execAsync(createExercisesTableSql('exercises'));
             await migrateExercisesTable(db);
+            await db.execAsync(createNotificationsTableSql('notifications'));
+            await migrateNotificationsTable(db);
             return db;
         });
     }

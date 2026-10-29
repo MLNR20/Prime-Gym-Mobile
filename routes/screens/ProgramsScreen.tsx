@@ -74,7 +74,6 @@ export default function ProgramsScreen({ onBack }: ProgramsScreenProps) {
         title="Programs"
         onBack={onBack}
         onAddPress={() => setIsAdding(true)}
-        onBellPress={() => {}}
         searchPlaceholder="Search programs"
         query={query}
         onQueryChange={setQuery}

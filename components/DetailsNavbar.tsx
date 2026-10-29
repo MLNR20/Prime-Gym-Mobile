@@ -6,12 +6,9 @@ type DetailsNavbarProps = {
     title?: string;
     // Omit on top-level screens (e.g. a tab) that have nowhere to go back to.
     onBack?: () => void;
+    // Omit when the navbar has no action button; a spacer keeps the title centered.
     rightIcon?: string;
     onRightPress?: () => void;
-    // Kept for existing callers that only wire up the bell.
-    onBellPress?: () => void;
-    // Shows a circled bell to the left of the right icon.
-    showBell?: boolean;
     // Draws the thin line under the navbar; turned off on details and add/edit screens.
     bordered?: boolean;
     // Rendered inside the navbar, below the title row (e.g. a search bar).
@@ -21,46 +18,30 @@ type DetailsNavbarProps = {
 export default function DetailsNavbar({
     title = 'Details',
     onBack,
-    rightIcon = 'bell-outline',
+    rightIcon,
     onRightPress,
-    onBellPress = () => {},
-    showBell = false,
     bordered = true,
     children,
 }: DetailsNavbarProps) {
-    // Matching side widths keep the title centered when the right side holds two buttons.
-    const sideStyle = showBell ? styles.sideWide : undefined;
     return (
         <View style={[styles.navbar, !bordered && styles.navbarBorderless]}>
             <View style={styles.row}>
-                <View style={[styles.side, sideStyle]}>
+                <View style={styles.side}>
                     {onBack ? (
                         <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.iconButton} />
                     ) : (
-                        <View style={styles.backSpacer} />
+                        <View style={styles.spacer} />
                     )}
                 </View>
                 <Text style={styles.title} className="text-[1.45rem] font-poppins-bold">
                     {title}
                 </Text>
-                <View style={[styles.side, styles.sideEnd, sideStyle]}>
-                    {showBell && (
-                        <IconButton
-                            icon="bell-outline"
-                            mode="outlined"
-                            size={24}
-                            iconColor="#000000"
-                            onPress={onBellPress}
-                            style={[styles.iconButton, styles.bellButton]}
-                        />
+                <View style={[styles.side, styles.sideEnd]}>
+                    {rightIcon ? (
+                        <IconButton icon={rightIcon} iconColor="#000000" onPress={onRightPress} style={styles.iconButton} />
+                    ) : (
+                        <View style={styles.spacer} />
                     )}
-                    <IconButton
-                        icon={rightIcon}
-                        mode={showBell ? 'outlined' : undefined}
-                        iconColor="#000000"
-                        onPress={onRightPress ?? onBellPress}
-                        style={[styles.iconButton, showBell && styles.bellButton]}
-                    />
                 </View>
             </View>
             {children}
@@ -94,18 +75,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         minWidth: 40,
     },
-    sideWide: {
-        width: 88,
-    },
     sideEnd: {
         justifyContent: 'flex-end',
-        gap: 8,
     },
-    bellButton: {
-        borderWidth: 2,
-        borderColor: '#EDF0F2',
-    },
-    backSpacer: {
+    spacer: {
         width: 40,
     },
     title: {

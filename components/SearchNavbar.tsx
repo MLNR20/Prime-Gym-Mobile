@@ -7,8 +7,8 @@ type SearchNavbarProps = {
     title: string;
     onBack?: () => void;
     onAddPress: () => void;
-    // When provided, a circled bell appears to the left of the + button.
-    onBellPress?: () => void;
+    // Icon of the action button on the right; the + button by default.
+    rightIcon?: string;
     searchPlaceholder: string;
     query: string;
     onQueryChange: (query: string) => void;
@@ -19,7 +19,7 @@ export default function SearchNavbar({
     title,
     onBack,
     onAddPress,
-    onBellPress,
+    rightIcon = 'plus',
     searchPlaceholder,
     query,
     onQueryChange,
@@ -28,10 +28,8 @@ export default function SearchNavbar({
         <DetailsNavbar
             title={title}
             onBack={onBack}
-            rightIcon="plus"
+            rightIcon={rightIcon}
             onRightPress={onAddPress}
-            showBell={!!onBellPress}
-            onBellPress={onBellPress}
         >
             <Searchbar
                 placeholder={searchPlaceholder}

@@ -76,7 +76,6 @@ export default function ExercisesScreen({ onBack }: ExercisesScreenProps) {
         title="Exercises"
         onBack={onBack}
         onAddPress={() => setIsAdding(true)}
-        onBellPress={() => {}}
         searchPlaceholder="Search exercises"
         query={query}
         onQueryChange={setQuery}

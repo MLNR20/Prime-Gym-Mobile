@@ -5,6 +5,7 @@ import type { Equipment, NewEquipment } from '../models/Equipment';
 import type { Exercise, NewExercise } from '../models/Exercise';
 import type { LockerKey, NewLockerKey } from '../models/LockerKey';
 import type { Member, NewMember } from '../models/Member';
+import type { NewNotification, Notification } from '../models/Notification';
 import type { NewProgram, Program } from '../models/Program';
 import { mirroredAttendanceRepository } from './MirroredAttendanceRepository';
 import { mirroredAuditLogRepository } from './MirroredAuditLogRepository';
@@ -15,6 +16,7 @@ import { mirroredMemberRepository } from './MirroredMemberRepository';
 import { mirroredProgramRepository } from './MirroredProgramRepository';
 import type { Repository } from './Repository';
 import { sqliteEquipmentRepository } from './SqliteEquipmentRepository';
+import { sqliteNotificationRepository } from './SqliteNotificationRepository';
 
 // SQLite is the source of truth; new members are also mirrored to Firestore for a cloud backup
 // (see MirroredMemberRepository). ViewModels depend on the Repository<T> interface only, so
@@ -23,6 +25,9 @@ export const memberRepository: Repository<Member, NewMember> = mirroredMemberRep
 
 // Equipment is local-only (no Firestore backup) for now.
 export const equipmentRepository: Repository<Equipment, NewEquipment> = sqliteEquipmentRepository;
+
+// Notifications are local-only (no Firestore backup) for now, same as equipment.
+export const notificationRepository: Repository<Notification, NewNotification> = sqliteNotificationRepository;
 
 // Contacts and locker keys are mirrored to Firestore for a cloud backup, same as members.
 export const contactRepository: Repository<Contact, NewContact> = mirroredContactRepository;

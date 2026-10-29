@@ -72,7 +72,6 @@ export default function SubscribersScreen({ onBack }: SubscribersScreenProps) {
         title="Subscribers"
         onBack={onBack}
         onAddPress={() => setIsAdding(true)}
-        onBellPress={() => {}}
         searchPlaceholder="Search members"
         query={query}
         onQueryChange={setQuery}

@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     },
     hubHeader: {
         paddingHorizontal: 32,
-        paddingTop: 64,
+        paddingTop: 96,
         paddingBottom: 24,
     },
     hubTitle: {

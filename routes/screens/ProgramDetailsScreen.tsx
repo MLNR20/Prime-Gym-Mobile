@@ -4,7 +4,7 @@ import DetailsScreenLayout from '../../components/DetailsScreenLayout';
 import ProgramExerciseCountPill from '../../components/ProgramExerciseCountPill';
 import type { Exercise } from '../../models/Exercise';
 import type { Program } from '../../models/Program';
-import { formatPhilippineTimestamp } from '../../utils/dateTime';
+import { formatPhilippineDate } from '../../utils/dateTime';
 
 type ProgramDetailsScreenProps = {
     program: Program;
@@ -32,8 +32,8 @@ export default function ProgramDetailsScreen({ program, exercises, onBack, onEdi
                         value: exercises.length > 0 ? exercises.map((exercise) => exercise.name).join('\n') : '—',
                         fullWidth: true,
                     },
-                    { label: 'Date Created', value: formatPhilippineTimestamp(program.date_created) },
-                    { label: 'Date Updated', value: formatPhilippineTimestamp(program.date_updated) },
+                    { label: 'Date Created', value: formatPhilippineDate(program.date_created) },
+                    { label: 'Date Updated', value: formatPhilippineDate(program.date_updated) },
                 ]}
             />
         </DetailsScreenLayout>

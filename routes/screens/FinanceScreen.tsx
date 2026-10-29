@@ -36,7 +36,7 @@ export default function FinanceScreen({ onBack }: FinanceScreenProps) {
 
     return (
         <View style={styles.screen}>
-            <DetailsNavbar title="Finance" onBack={onBack} rightIcon="plus" onRightPress={() => setIsAdding(true)} showBell onBellPress={() => {}} />
+            <DetailsNavbar title="Finance" onBack={onBack} rightIcon="plus" onRightPress={() => setIsAdding(true)} />
             {loading && <ActivityIndicator style={styles.spinner} />}
             {!loading && error && <Text style={styles.message}>{error}</Text>}
             {!loading && !error && (

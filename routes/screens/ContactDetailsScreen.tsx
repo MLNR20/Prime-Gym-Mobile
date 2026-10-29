@@ -3,7 +3,7 @@ import DetailSection from '../../components/DetailSection';
 import DetailsHeader from '../../components/DetailsHeader';
 import DetailsScreenLayout from '../../components/DetailsScreenLayout';
 import type { Contact } from '../../models/Contact';
-import { formatPhilippineTimestamp } from '../../utils/dateTime';
+import { formatPhilippineDate } from '../../utils/dateTime';
 
 type ContactDetailsScreenProps = {
     contact: Contact;
@@ -27,8 +27,8 @@ export default function ContactDetailsScreen({ contact, onBack, onEdit, onDelete
                     { label: 'Phone Number', value: contact.phone_number || '—' },
                     { label: 'Email', value: contact.email || '—' },
                     { label: 'Notes', value: contact.notes || '—', fullWidth: true },
-                    { label: 'Date Created', value: formatPhilippineTimestamp(contact.date_created) },
-                    { label: 'Date Updated', value: formatPhilippineTimestamp(contact.date_updated) },
+                    { label: 'Date Created', value: formatPhilippineDate(contact.date_created) },
+                    { label: 'Date Updated', value: formatPhilippineDate(contact.date_updated) },
                 ]}
             />
         </DetailsScreenLayout>

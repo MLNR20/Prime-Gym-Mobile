@@ -3,7 +3,7 @@ import DetailsHeader from '../../components/DetailsHeader';
 import DetailsScreenLayout from '../../components/DetailsScreenLayout';
 import EquipmentStatusPill from '../../components/EquipmentStatusPill';
 import type { Equipment } from '../../models/Equipment';
-import { formatPhilippineTimestamp } from '../../utils/dateTime';
+import { formatPhilippineDate } from '../../utils/dateTime';
 
 type EquipmentDetailsScreenProps = {
     equipment: Equipment;
@@ -25,8 +25,8 @@ export default function EquipmentDetailsScreen({ equipment, onBack, onEdit, onDe
                 description="Identification and history for this piece of equipment."
                 rows={[
                     { label: 'Equipment ID', value: equipment.id, fullWidth: true },
-                    { label: 'Date Created', value: formatPhilippineTimestamp(equipment.date_created) },
-                    { label: 'Date Updated', value: formatPhilippineTimestamp(equipment.date_updated) },
+                    { label: 'Date Created', value: formatPhilippineDate(equipment.date_created) },
+                    { label: 'Date Updated', value: formatPhilippineDate(equipment.date_updated) },
                 ]}
             />
         </DetailsScreenLayout>
