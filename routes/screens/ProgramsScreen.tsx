@@ -8,6 +8,7 @@ import type { ProgramFormValues } from "../../components/ProgramForm";
 import ProgramListCard from "../../components/ProgramListCard";
 import type { Program } from "../../models/Program";
 import { useProgramsViewModel } from "../../viewmodels/useProgramsViewModel";
+import { palette, themedStyles } from '../../utils/theme';
 
 type ProgramsScreenProps = {
   onBack: () => void;
@@ -17,6 +18,9 @@ export default function ProgramsScreen({ onBack }: ProgramsScreenProps) {
   const {
     programs,
     exercisesFor,
+    subscribers,
+    subscribersFor,
+    assignSubscriber,
     query,
     setQuery,
     loading,
@@ -55,6 +59,9 @@ export default function ProgramsScreen({ onBack }: ProgramsScreenProps) {
       <ProgramDetailsScreen
         program={viewingProgram}
         exercises={exercisesFor(viewingProgram)}
+        assignedSubscribers={subscribersFor(viewingProgram)}
+        subscribers={subscribers}
+        onAssign={(member) => assignSubscriber(viewingProgram, member)}
         onBack={() => setViewingProgram(null)}
         onEdit={() => {
           setViewingProgram(null);
@@ -90,7 +97,7 @@ export default function ProgramsScreen({ onBack }: ProgramsScreenProps) {
             showSearchBar={false}
             onItemPress={(program) => setViewingProgram(program)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor={palette.iconMuted} style={styles.chevron} />
             )}
           />
         </View>
@@ -99,10 +106,10 @@ export default function ProgramsScreen({ onBack }: ProgramsScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: palette.background,
   },
   content: {
     flex: 1,
@@ -117,4 +124,4 @@ const styles = StyleSheet.create({
   chevron: {
     margin: 0,
   },
-});
+}));

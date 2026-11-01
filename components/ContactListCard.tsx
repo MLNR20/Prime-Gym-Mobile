@@ -4,6 +4,7 @@ import { ActivityIndicator, List, Searchbar, Text } from 'react-native-paper';
 import type { Contact } from '../models/Contact';
 import { commonStyles } from './commonStyles';
 import ContactStatusPill from './ContactStatusPill';
+import { palette, themedStyles } from '../utils/theme';
 
 type ContactListCardProps = {
     contacts: Contact[];
@@ -32,7 +33,7 @@ export default function ContactListCard({
     return (
         <View style={[commonStyles.listView, styles.flexFill]}>
             {showSearchBar && (
-                <Searchbar placeholder="Search contacts" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor="#9CA3AF" iconColor="#C4C7CC" value={query} />
+                <Searchbar placeholder="Search contacts" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor={palette.subtle} iconColor={palette.iconMuted} value={query} />
             )}
             {loading && <ActivityIndicator style={styles.spinner} />}
             {!loading && error && (
@@ -68,7 +69,7 @@ export default function ContactListCard({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     flexFill: {
         flex: 1,
     },
@@ -77,10 +78,10 @@ const styles = StyleSheet.create({
     },
     itemTitle: commonStyles.cardTitle,
     itemDescription: {
-        color: '#5C4300',
+        color: palette.brown,
     },
     category: {
-        color: '#5a3f00',
+        color: palette.brown,
         fontSize: 12,
     },
     descriptionRow: {
@@ -92,4 +93,4 @@ const styles = StyleSheet.create({
     spinner: {
         paddingVertical: 12,
     },
-});
+}));

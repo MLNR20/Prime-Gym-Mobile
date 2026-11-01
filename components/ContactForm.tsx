@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, SegmentedButtons, Text } from 'react-native-paper';
 import type { Contact, ContactCategory } from '../models/Contact';
-import { commonStyles } from './commonStyles';
-import FormTextInput, { FormLabel } from './FormTextInput';
+import FormSelect from './FormSelect';
+import FormActions from './FormActions';
+import FormTextInput from './FormTextInput';
 
 const CATEGORIES: ContactCategory[] = ['Staff', 'Trainer', 'Supplier', 'Emergency', 'Other'];
+const CATEGORY_OPTIONS = CATEGORIES.map((category) => ({ value: category, label: category }));
 
 export type ContactFormValues = {
     name: string;
@@ -71,26 +72,10 @@ export default function ContactForm({ editingContact, onSubmit, onCancel }: Cont
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
-            <View style={styles.group}>
-                <FormLabel>Category</FormLabel>
-                <SegmentedButtons
-                    value={category}
-                    onValueChange={(value) => setCategory(value as ContactCategory)}
-                    buttons={CATEGORIES.map((categoryOption) => ({ value: categoryOption, label: categoryOption }))}
-                />
-            </View>
+            <FormSelect label="Category" value={category} options={CATEGORY_OPTIONS} onChange={setCategory} />
             <FormTextInput label="Notes" value={notes} onChangeText={setNotes} multiline />
 
-            <View style={styles.actions}>
-                {editingContact && (
-                    <Button mode="text" textColor="#6B7280" onPress={onCancel}>
-                        Cancel
-                    </Button>
-                )}
-                <Button mode="contained" textColor="#fff" contentStyle={commonStyles.submitButtonContent} onPress={handleSubmit} style={commonStyles.submitButton}>
-                    {editingContact ? 'Save' : 'Add'}
-                </Button>
-            </View>
+            <FormActions submitLabel={editingContact ? 'Save' : 'Add'} onSubmit={handleSubmit} onCancel={editingContact ? onCancel : undefined} />
         </View>
     );
 }
@@ -99,13 +84,5 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         gap: 20,
-    },
-    group: {
-        width: '100%',
-        gap: 6,
-    },
-    actions: {
-        width: '100%',
-        gap: 8,
     },
 });

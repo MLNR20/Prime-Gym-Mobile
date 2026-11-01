@@ -6,6 +6,7 @@ import type { AttendanceFormValues } from '../../components/AttendanceForm';
 import AttendanceListCard from '../../components/AttendanceListCard';
 import SearchNavbar from '../../components/SearchNavbar';
 import { useAttendanceViewModel } from '../../viewmodels/useAttendanceViewModel';
+import { palette, themedStyles } from '../../utils/theme';
 
 export default function AttendanceScreen() {
     const {
@@ -63,7 +64,7 @@ export default function AttendanceScreen() {
                     onItemPress={startEditing}
                     renderRight={(row) =>
                         row.time_out ? (
-                            <IconButton icon="check-circle" iconColor="#166534" size={22} style={styles.action} />
+                            <IconButton icon="check-circle" iconColor={palette.okText} size={22} style={styles.action} />
                         ) : (
                             <IconButton icon="logout" size={22} style={styles.action} onPress={() => checkOut(row)} />
                         )
@@ -74,10 +75,10 @@ export default function AttendanceScreen() {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         flex: 1,
@@ -87,4 +88,4 @@ const styles = StyleSheet.create({
     action: {
         margin: 0,
     },
-});
+}));

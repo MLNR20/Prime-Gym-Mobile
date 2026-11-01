@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { Divider, Text } from 'react-native-paper';
 import { formatDateOnly } from '../utils/dateTime';
+import { palette, themedStyles } from '../utils/theme';
 
 type PaymentDateDividerProps = {
     paymentDate: string;
@@ -18,7 +19,7 @@ export default function PaymentDateDivider({ paymentDate }: PaymentDateDividerPr
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -27,12 +28,12 @@ const styles = StyleSheet.create({
     },
     line: {
         flex: 1,
-        backgroundColor: '#D1D5DB',
+        backgroundColor: palette.divider,
     },
     label: {
-        color: '#6B7280',
+        color: palette.muted,
         fontSize: 12,
         fontFamily: 'Poppins_700Bold',
         textAlign: 'center',
     },
-});
+}));

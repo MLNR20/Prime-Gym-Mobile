@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import DetailsNavbar from './DetailsNavbar';
 import { commonStyles } from './commonStyles';
+import { palette, themedStyles } from '../utils/theme';
 
 type SearchNavbarProps = {
     title: string;
@@ -36,21 +37,21 @@ export default function SearchNavbar({
                 onChangeText={onQueryChange}
                 style={[commonStyles.searchBar, styles.searchBar]}
                 inputStyle={styles.searchInput}
-                placeholderTextColor="#9CA3AF"
-                iconColor="#C4C7CC"
+                placeholderTextColor={palette.subtle}
+                iconColor={palette.iconMuted}
                 value={query}
             />
         </DetailsNavbar>
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     searchBar: {
         marginTop: 16,
         borderWidth: 2,
-        borderColor: '#EDF0F2',
+        borderColor: palette.border,
     },
     searchInput: {
-        color: '#374151',
+        color: palette.bodyText,
     },
-});
+}));

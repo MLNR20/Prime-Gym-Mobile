@@ -4,6 +4,7 @@ import { ActivityIndicator, List, Searchbar, Text } from 'react-native-paper';
 import type { LockerKey } from '../models/LockerKey';
 import { commonStyles } from './commonStyles';
 import LockerKeyStatusPill from './LockerKeyStatusPill';
+import { palette, themedStyles } from '../utils/theme';
 
 type LockerKeyListCardProps = {
     lockerKeys: LockerKey[];
@@ -32,7 +33,7 @@ export default function LockerKeyListCard({
     return (
         <View style={[commonStyles.listView, styles.flexFill]}>
             {showSearchBar && (
-                <Searchbar placeholder="Search locker keys" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor="#9CA3AF" iconColor="#C4C7CC" value={query} />
+                <Searchbar placeholder="Search locker keys" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor={palette.subtle} iconColor={palette.iconMuted} value={query} />
             )}
             {loading && <ActivityIndicator style={styles.spinner} />}
             {!loading && error && (
@@ -68,7 +69,7 @@ export default function LockerKeyListCard({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     flexFill: {
         flex: 1,
     },
@@ -77,10 +78,10 @@ const styles = StyleSheet.create({
     },
     itemTitle: commonStyles.cardTitle,
     itemDescription: {
-        color: '#5C4300',
+        color: palette.brown,
     },
     keyCode: {
-        color: '#5a3f00',
+        color: palette.brown,
         fontSize: 12,
     },
     descriptionRow: {
@@ -92,4 +93,4 @@ const styles = StyleSheet.create({
     spinner: {
         paddingVertical: 12,
     },
-});
+}));

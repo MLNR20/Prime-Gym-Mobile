@@ -55,6 +55,7 @@ export function useSubscribersViewModel() {
             // New members are always created active, timestamped in Philippine Standard Time.
             await memberRepository.add({
                 ...values,
+                program_id: '',
                 date_created: timestamp,
                 date_updated: timestamp,
                 is_deleted: false,

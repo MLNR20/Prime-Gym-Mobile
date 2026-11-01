@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import ContactForm, { type ContactFormValues } from '../../components/ContactForm';
 import DetailsNavbar from '../../components/DetailsNavbar';
 import type { Contact } from '../../models/Contact';
+import { palette, themedStyles } from '../../utils/theme';
 
 type AddContactScreenProps = {
     editingContact: Contact | null;
@@ -20,13 +21,13 @@ export default function AddContactScreen({ editingContact, onSubmit, onCancel }:
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         paddingHorizontal: 32,
         paddingVertical: 24,
     },
-});
+}));

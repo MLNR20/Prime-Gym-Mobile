@@ -1,11 +1,18 @@
+import { useState } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
 import LabelHeader from '../../components/LabelHeader';
 import { dashboardScreenStyles, surfaceBorder } from '../../components/commonStyles';
+import { useGymProfile } from '../../utils/gymProfile';
 import { rem } from '../../utils/rem';
+import { auth } from '../../firebase/firebaseConfig';
 import { signOutUser } from '../../viewmodels/useAuthViewModel';
+import ChangePasswordScreen from './ChangePasswordScreen';
+import EditProfileScreen from './EditProfileScreen';
+import { palette, themedStyles } from '../../utils/theme';
 
 const OWNER = {
     name: 'Miguel Rivadenera',
@@ -64,13 +71,13 @@ function ActionRow({ icon, label, description, isLast, danger, onPress }: Action
             {({ pressed }) => (
                 <View style={[styles.actionRow, !isLast && styles.infoRowDivider, pressed && styles.actionRowPressed]}>
                     <View style={styles.iconWrapper}>
-                        <Ionicons name={icon} size={18} color={danger ? '#DC2626' : '#FBBF77'} />
+                        <Ionicons name={icon} size={18} color={danger ? palette.danger : '#FBBF77'} />
                     </View>
                     <View style={styles.infoTextGroup}>
                         <Text style={[styles.actionLabel, danger && styles.actionLabelDanger]} numberOfLines={1}>{label}</Text>
                         <Text style={styles.infoLabel} numberOfLines={1}>{description}</Text>
                     </View>
-                    <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
+                    <Ionicons name="chevron-forward" size={18} color={palette.subtle} />
                 </View>
             )}
         </Pressable>
@@ -78,9 +85,23 @@ function ActionRow({ icon, label, description, isLast, danger, onPress }: Action
 }
 
 export default function ProfileScreen() {
+    const [view, setView] = useState<'profile' | 'edit' | 'password'>('profile');
+    // updateProfile doesn't fire the auth listener, so the saved name is kept here to refresh the card.
+    const [name, setName] = useState(auth.currentUser?.displayName || OWNER.name);
+    const email = auth.currentUser?.email || OWNER.email;
+    // Reloaded each time the tab regains focus, so edits made in Settings > Gym Profile show up here.
+    const gym = useGymProfile(useIsFocused());
+
+    if (view === 'edit') {
+        return <EditProfileScreen initialName={name} email={email} onSaved={setName} onBack={() => setView('profile')} />;
+    }
+    if (view === 'password') {
+        return <ChangePasswordScreen onBack={() => setView('profile')} />;
+    }
+
     return (
         <ScrollView style={dashboardScreenStyles.scrollView} contentContainerStyle={dashboardScreenStyles.content}>
-            <LabelHeader label="Profile" icon="pencil-outline" onPress={() => {}} />
+            <LabelHeader label="Profile" icon="pencil-outline" onPress={() => setView('edit')} />
 
             <LinearGradient
                 colors={['#F59E0B', '#FFC107']}
@@ -89,10 +110,10 @@ export default function ProfileScreen() {
                 style={styles.card}
             >
                 <View style={styles.avatar}>
-                    <Text className="text-xl font-poppins-bold text-black">{getInitials(OWNER.name)}</Text>
+                    <Text className="text-xl font-poppins-bold text-black">{getInitials(name)}</Text>
                 </View>
                 <View style={styles.identity}>
-                    <Text style={styles.name} className="font-poppins-bold text-black">{OWNER.name}</Text>
+                    <Text style={styles.name} className="font-poppins-bold text-black">{name}</Text>
                     <Text className="text-sm font-poppins" style={styles.role}>
                         {OWNER.role}
                     </Text>
@@ -100,20 +121,21 @@ export default function ProfileScreen() {
             </LinearGradient>
 
             <View style={styles.section}>
-                <Text className="text-lg font-poppins-bold text-black">Gym Information</Text>
+                <Text className="text-lg font-poppins-bold" style={{ color: palette.text }}>Gym Information</Text>
                 <View style={styles.sectionCard}>
-                    <InfoRow icon="business-outline" label="Gym Name" value={OWNER.gymName} />
-                    <InfoRow icon="mail-outline" label="Email" value={OWNER.email} />
-                    <InfoRow icon="call-outline" label="Phone" value={OWNER.phone} />
+                    <InfoRow icon="business-outline" label="Gym Name" value={gym.name || OWNER.gymName} />
+                    <InfoRow icon="mail-outline" label="Email" value={email} />
+                    <InfoRow icon="call-outline" label="Phone" value={gym.phone || 'Not set'} />
+                    {!!gym.address && <InfoRow icon="location-outline" label="Address" value={gym.address} />}
                     <InfoRow icon="calendar-outline" label="Member Since" value={OWNER.memberSince} isLast />
                 </View>
             </View>
 
             <View style={styles.section}>
-                <Text className="text-lg font-poppins-bold text-black">Account</Text>
+                <Text className="text-lg font-poppins-bold" style={{ color: palette.text }}>Account</Text>
                 <View style={styles.sectionCard}>
-                    <ActionRow icon="create-outline" label="Edit Profile" description="Update your details" />
-                    <ActionRow icon="lock-closed-outline" label="Change Password" description="Keep your account secure" />
+                    <ActionRow icon="create-outline" label="Edit Profile" description="Update your details" onPress={() => setView('edit')} />
+                    <ActionRow icon="lock-closed-outline" label="Change Password" description="Keep your account secure" onPress={() => setView('password')} />
                     <ActionRow icon="log-out-outline" label="Log Out" description="Sign out of this device" danger isLast onPress={signOutUser} />
                 </View>
             </View>
@@ -121,7 +143,7 @@ export default function ProfileScreen() {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     card: {
         width: '100%',
         marginTop: 12,
@@ -158,7 +180,7 @@ const styles = StyleSheet.create({
     },
     sectionCard: {
         width: '100%',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: palette.background,
         borderRadius: 16,
         paddingHorizontal: 0,
         paddingVertical: 6,
@@ -171,13 +193,13 @@ const styles = StyleSheet.create({
     },
     infoRowDivider: {
         borderBottomWidth: 1,
-        borderBottomColor: '#F2F5F7',
+        borderBottomColor: palette.surface,
     },
     iconWrapper: {
         width: 44,
         height: 44,
         borderRadius: 12,
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         ...surfaceBorder,
         alignItems: 'center',
         justifyContent: 'center',
@@ -188,12 +210,12 @@ const styles = StyleSheet.create({
     },
     infoLabel: {
         fontSize: rem(0.95),
-        color: '#6B7280',
+        color: palette.muted,
         fontFamily: 'Poppins_400Regular',
     },
     infoValue: {
         fontSize: rem(0.975),
-        color: '#000000',
+        color: palette.text,
         fontFamily: 'Poppins_700Bold',
     },
     actionRow: {
@@ -207,10 +229,10 @@ const styles = StyleSheet.create({
     },
     actionLabel: {
         fontSize: rem(0.975),
-        color: '#000000',
+        color: palette.text,
         fontFamily: 'Poppins_700Bold',
     },
     actionLabelDanger: {
-        color: '#DC2626',
+        color: palette.danger,
     },
-});
+}));

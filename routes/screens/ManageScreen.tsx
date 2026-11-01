@@ -11,6 +11,7 @@ import ExercisesScreen from './ExercisesScreen';
 import ProgramsScreen from './ProgramsScreen';
 import FinanceScreen from './FinanceScreen';
 import ReportsScreen from './ReportsScreen';
+import { palette, themedStyles } from '../../utils/theme';
 
 export type ManageSection = 'subscribers' | 'finance' | 'reports' | 'exercises' | 'programs' | 'equipment' | 'contacts' | 'lockerKeys';
 
@@ -74,10 +75,10 @@ export default function ManageScreen() {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     hubHeader: {
         paddingHorizontal: 32,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
         paddingBottom: 24,
     },
     hubTitle: {
-        color: '#000000',
+        color: palette.text,
         fontFamily: 'Poppins_700Bold',
     },
     hubGrid: {
@@ -101,14 +102,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 12,
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         borderWidth: 2,
-        borderColor: '#EDF0F2',
+        borderColor: palette.border,
         borderRadius: 12,
     },
     hubItemTitle: {
-        color: '#000000',
+        color: palette.text,
         fontSize: 14,
         fontFamily: 'Poppins_600SemiBold',
     },
-});
+}));

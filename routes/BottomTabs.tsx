@@ -4,11 +4,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import DashboardScreen from './screens/DashboardScreen';
+import { useExpiredSubscriptionNotifier } from '../viewmodels/useExpiredSubscriptionNotifier';
 import { useUnreadNotificationCount } from '../viewmodels/useNotificationsViewModel';
 import InboxScreen from './screens/InboxScreen';
 import ManageScreen from './screens/ManageScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import { palette } from '../utils/theme';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -28,15 +30,16 @@ const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
     const unreadCount = useUnreadNotificationCount();
+    useExpiredSubscriptionNotifier();
 
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarActiveTintColor: '#F59E0B',
-                tabBarInactiveTintColor: '#9CA3AF',
-                tabBarStyle: { height: 88, paddingTop: 8, paddingBottom: 2, marginBottom: 2 },
-                tabBarLabelStyle: { fontFamily: 'Poppins_600SemiBold', fontSize: 10 + 0.01 * 16, marginTop: 0.4 * 16, marginBottom: 0.2 * 16 },
+                tabBarInactiveTintColor: palette.subtle,
+                tabBarStyle: { backgroundColor: palette.background, borderTopColor: palette.divider, height: 88, paddingTop: 8, paddingBottom: 2, marginBottom: 2 },
+                tabBarLabelStyle: { fontFamily: 'Poppins_600SemiBold', fontSize: 10 + 0.02 * 16, marginTop: 0.4 * 16, marginBottom: 0.2 * 16 },
                 tabBarIcon: ({ color }) => (
                     <View style={styles.iconWrapper}>
                         <Ionicons name={ICONS[route.name]} color={color} size={ICON_SIZE} style={styles.icon} />
@@ -51,7 +54,7 @@ export default function BottomTabs() {
                 component={InboxScreen}
                 options={{
                     tabBarBadge: unreadCount > 0 ? unreadCount : undefined,
-                    tabBarBadgeStyle: { backgroundColor: '#F59E0B', color: '#000000', fontFamily: 'Poppins_600SemiBold' },
+                    tabBarBadgeStyle: { backgroundColor: '#F59E0B', color: palette.text, fontFamily: 'Poppins_600SemiBold' },
                 }}
             />
             <Tab.Screen name="Profile" component={ProfileScreen} />

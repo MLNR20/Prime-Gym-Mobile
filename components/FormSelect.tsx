@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Menu, Text } from 'react-native-paper';
 import { FormLabel } from './FormTextInput';
+import { palette, themedStyles } from '../utils/theme';
 
 export type SelectOption<T extends string> = { value: T; label: string };
 
@@ -55,7 +56,7 @@ export default function FormSelect<T extends string>({ label, value, options, on
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     field: {
         width: '100%',
         gap: 6,
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     select: {
         height: 56,
         borderRadius: 8,
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         paddingHorizontal: 16,
         flexDirection: 'row',
         alignItems: 'center',
@@ -71,27 +72,27 @@ const styles = StyleSheet.create({
     },
     value: {
         fontSize: 16,
-        color: '#000000',
+        color: palette.text,
     },
     placeholder: {
         fontSize: 16,
-        color: '#9CA3AF',
+        color: palette.subtle,
     },
     optionList: {
         maxHeight: 240,
     },
     chevron: {
         fontSize: 10,
-        color: '#9CA3AF',
+        color: palette.subtle,
     },
     menu: {
-        backgroundColor: '#E5E7EB',
+        backgroundColor: palette.divider,
     },
     option: {
-        color: '#111827',
+        color: palette.inputText,
     },
     selectedOption: {
         color: '#F59E0B',
         fontFamily: 'Poppins_700Bold',
     },
-});
+}));

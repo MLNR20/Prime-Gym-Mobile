@@ -4,6 +4,7 @@ import { ActivityIndicator, List, Searchbar, Text } from 'react-native-paper';
 import type { Program } from '../models/Program';
 import { commonStyles } from './commonStyles';
 import ProgramExerciseCountPill from './ProgramExerciseCountPill';
+import { palette, themedStyles } from '../utils/theme';
 
 type ProgramListCardProps = {
     programs: Program[];
@@ -34,7 +35,7 @@ export default function ProgramListCard({
     return (
         <View style={[commonStyles.listView, styles.flexFill]}>
             {showSearchBar && (
-                <Searchbar placeholder="Search programs" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor="#9CA3AF" iconColor="#C4C7CC" value={query} />
+                <Searchbar placeholder="Search programs" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor={palette.subtle} iconColor={palette.iconMuted} value={query} />
             )}
             {loading && <ActivityIndicator style={styles.spinner} />}
             {!loading && error && (
@@ -69,7 +70,7 @@ export default function ProgramListCard({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     flexFill: {
         flex: 1,
     },
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     },
     itemTitle: commonStyles.cardTitle,
     itemDescription: {
-        color: '#5C4300',
+        color: palette.brown,
     },
     descriptionRow: {
         flexDirection: 'row',
@@ -89,4 +90,4 @@ const styles = StyleSheet.create({
     spinner: {
         paddingVertical: 12,
     },
-});
+}));

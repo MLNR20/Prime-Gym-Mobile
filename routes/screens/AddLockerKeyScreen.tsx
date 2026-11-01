@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import LockerKeyForm, { type LockerKeyFormValues } from '../../components/LockerKeyForm';
 import DetailsNavbar from '../../components/DetailsNavbar';
 import type { LockerKey } from '../../models/LockerKey';
+import { palette, themedStyles } from '../../utils/theme';
 
 type AddLockerKeyScreenProps = {
     editingLockerKey: LockerKey | null;
@@ -20,13 +21,13 @@ export default function AddLockerKeyScreen({ editingLockerKey, onSubmit, onCance
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         paddingHorizontal: 32,
         paddingVertical: 24,
     },
-});
+}));

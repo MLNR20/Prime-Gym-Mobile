@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, SegmentedButtons, Text } from 'react-native-paper';
 import type { LockerKey, LockerKeyStatus } from '../models/LockerKey';
 import { LOCKER_KEY_STATUSES } from '../utils/lockerKeyStatus';
-import { commonStyles } from './commonStyles';
-import FormTextInput, { FormLabel } from './FormTextInput';
+import FormSelect from './FormSelect';
+import FormActions from './FormActions';
+import FormTextInput from './FormTextInput';
+
+const STATUS_OPTIONS = LOCKER_KEY_STATUSES.map((statusOption) => ({ value: statusOption, label: statusOption }));
 
 export type LockerKeyFormValues = {
     locker_number: string;
@@ -53,30 +55,14 @@ export default function LockerKeyForm({ editingLockerKey, onSubmit, onCancel }: 
         <View style={styles.container}>
             <FormTextInput label="Locker Number" value={lockerNumber} onChangeText={setLockerNumber} />
             <FormTextInput label="Key Code" value={keyCode} onChangeText={setKeyCode} />
-            <View style={styles.group}>
-                <FormLabel>Status</FormLabel>
-                <SegmentedButtons
-                    value={status}
-                    onValueChange={(value) => setStatus(value as LockerKeyStatus)}
-                    buttons={LOCKER_KEY_STATUSES.map((statusOption) => ({ value: statusOption, label: statusOption }))}
-                />
-            </View>
+            <FormSelect label="Status" value={status} options={STATUS_OPTIONS} onChange={setStatus} />
             <FormTextInput
                 label="Assigned To"
                 value={assignedTo}
                 onChangeText={setAssignedTo}
             />
 
-            <View style={styles.actions}>
-                {editingLockerKey && (
-                    <Button mode="text" textColor="#6B7280" onPress={onCancel}>
-                        Cancel
-                    </Button>
-                )}
-                <Button mode="contained" textColor="#fff" contentStyle={commonStyles.submitButtonContent} onPress={handleSubmit} style={commonStyles.submitButton}>
-                    {editingLockerKey ? 'Save' : 'Add'}
-                </Button>
-            </View>
+            <FormActions submitLabel={editingLockerKey ? 'Save' : 'Add'} onSubmit={handleSubmit} onCancel={editingLockerKey ? onCancel : undefined} />
         </View>
     );
 }
@@ -85,13 +71,5 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         gap: 20,
-    },
-    group: {
-        width: '100%',
-        gap: 6,
-    },
-    actions: {
-        width: '100%',
-        gap: 8,
     },
 });

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
+import { palette, themedStyles } from '../utils/theme';
 
 type DetailsNavbarProps = {
     title?: string;
@@ -28,7 +29,7 @@ export default function DetailsNavbar({
             <View style={styles.row}>
                 <View style={styles.side}>
                     {onBack ? (
-                        <IconButton icon="arrow-left" iconColor="#000000" onPress={onBack} style={styles.iconButton} />
+                        <IconButton icon="arrow-left" iconColor={palette.text} onPress={onBack} style={styles.iconButton} />
                     ) : (
                         <View style={styles.spacer} />
                     )}
@@ -38,7 +39,7 @@ export default function DetailsNavbar({
                 </Text>
                 <View style={[styles.side, styles.sideEnd]}>
                     {rightIcon ? (
-                        <IconButton icon={rightIcon} iconColor="#000000" onPress={onRightPress} style={styles.iconButton} />
+                        <IconButton icon={rightIcon} iconColor={palette.text} onPress={onRightPress} style={styles.iconButton} />
                     ) : (
                         <View style={styles.spacer} />
                     )}
@@ -49,14 +50,14 @@ export default function DetailsNavbar({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     navbar: {
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
         paddingHorizontal: 32,
         paddingTop: 80, // 48 + 2rem
         paddingBottom: 20,
         borderBottomWidth: 1,
-        borderBottomColor: '#E5E7EB',
+        borderBottomColor: palette.divider,
     },
     row: {
         flexDirection: 'row',
@@ -83,8 +84,8 @@ const styles = StyleSheet.create({
     },
     title: {
         flex: 1,
-        color: '#000000',
+        color: palette.text,
         fontFamily: 'Poppins_700Bold',
         textAlign: 'center',
     },
-});
+}));

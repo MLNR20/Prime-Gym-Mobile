@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import EquipmentForm, { type EquipmentFormValues } from '../../components/EquipmentForm';
 import DetailsNavbar from '../../components/DetailsNavbar';
 import type { Equipment } from '../../models/Equipment';
+import { palette, themedStyles } from '../../utils/theme';
 
 type AddEquipmentScreenProps = {
     editingEquipment: Equipment | null;
@@ -20,13 +21,13 @@ export default function AddEquipmentScreen({ editingEquipment, onSubmit, onCance
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         paddingHorizontal: 32,
         paddingVertical: 24,
     },
-});
+}));

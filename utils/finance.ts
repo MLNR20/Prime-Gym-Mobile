@@ -2,6 +2,7 @@ import type { Member, MembershipPlan } from '../models/Member';
 import { nowInPhilippineTime } from './dateTime';
 import { getMemberStatus, type MemberStatus } from './memberStatus';
 
+// Plans always listed in the breakdowns; any other plan a subscriber is on (added in Settings) is appended.
 export const MEMBERSHIP_PLANS: MembershipPlan[] = ['Basic', 'Standard', 'Premium'];
 
 export type PlanBreakdown = {
@@ -71,7 +72,8 @@ export function summarizeSubscribers(members: Member[]): SubscriberBreakdown {
 }
 
 function breakdownByPlan(members: Member[]): PlanBreakdown[] {
-    return MEMBERSHIP_PLANS.map((plan) => {
+    const plans = [...new Set([...MEMBERSHIP_PLANS, ...members.map((member) => member.plan)])];
+    return plans.map((plan) => {
         const inPlan = members.filter((member) => member.plan === plan);
         return {
             plan,

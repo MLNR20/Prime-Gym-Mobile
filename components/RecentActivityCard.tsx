@@ -3,13 +3,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRecentActivityViewModel } from '../viewmodels/useRecentActivityViewModel';
 import { surfaceBorder } from './commonStyles';
 import { formatPhilippineTimestamp } from '../utils/dateTime';
+import { palette, themedStyles } from '../utils/theme';
 
 export default function RecentActivityCard() {
     const { entries, loading, error } = useRecentActivityViewModel();
 
     return (
         <View style={styles.container}>
-            <Text className="text-lg font-poppins-bold text-black">Recent Activity</Text>
+            <Text className="text-lg font-poppins-bold" style={{ color: palette.text }}>Recent Activity</Text>
             <View style={styles.card}>
                 {loading && <Text style={styles.message}>Loading...</Text>}
                 {!loading && error && <Text style={styles.message}>{error}</Text>}
@@ -41,7 +42,7 @@ export default function RecentActivityCard() {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     container: {
         width: '100%',
         marginTop: 24,
@@ -49,13 +50,13 @@ const styles = StyleSheet.create({
     },
     card: {
         width: '100%',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: palette.background,
         borderRadius: 16,
         paddingHorizontal: 0,
         paddingVertical: 6,
     },
     message: {
-        color: '#6B7280',
+        color: palette.muted,
         fontSize: 13,
         fontFamily: 'Poppins_400Regular',
     },
@@ -67,13 +68,13 @@ const styles = StyleSheet.create({
     },
     rowDivider: {
         borderBottomWidth: 1,
-        borderBottomColor: '#F2F5F7',
+        borderBottomColor: palette.surface,
     },
     iconWrapper: {
         width: 44,
         height: 44,
         borderRadius: 12,
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         ...surfaceBorder,
         alignItems: 'center',
         justifyContent: 'center',
@@ -84,12 +85,12 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 14 + 0.1 * 16,
-        color: '#000000',
+        color: palette.text,
         fontFamily: 'Poppins_700Bold',
     },
     timestamp: {
         fontSize: 15.2,
-        color: '#6B7280',
+        color: palette.muted,
         fontFamily: 'Poppins_400Regular',
     },
-});
+}));

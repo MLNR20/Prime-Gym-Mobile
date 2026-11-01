@@ -1,28 +1,32 @@
 import { StyleSheet } from 'react-native';
+import { palette, themedStyles } from '../utils/theme';
 
 /** Border shared by every gray-filled surface (cards, search bars, icon tiles). */
+// A getter, so the color follows the current scheme whenever a style sheet spreads it.
 export const surfaceBorder = {
     borderWidth: 2,
-    borderColor: '#EDF0F2',
-} as const;
+    get borderColor() {
+        return palette.border;
+    },
+};
 
-export const commonStyles = StyleSheet.create({
+export const commonStyles = themedStyles(() => StyleSheet.create({
     /** Title text on every list card (subscriber, contact, equipment, ...). */
     cardTitle: {
-        color: '#000000',
+        color: palette.text,
         fontFamily: 'Poppins_800ExtraBold',
     },
     container: {
         flex: 1,
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
         paddingTop: 64,
         paddingHorizontal: 32,
         gap: 4,
     },
     scrollView: {
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
         paddingHorizontal: 32,
         paddingVertical: 64,
     },
@@ -30,20 +34,20 @@ export const commonStyles = StyleSheet.create({
         width: '100%',
         height: 48,
         borderWidth: 1,
-        borderColor: '#E5E7EB',
+        borderColor: palette.divider,
         borderRadius: 8,
         paddingHorizontal: 12,
         fontSize: 16,
-        color: '#000',
+        color: palette.text,
     },
     listView: {
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
         width: '100%',
         gap: 12,
     },
     cardForListView:
     {
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         ...surfaceBorder,
         borderRadius: 8,
         paddingHorizontal: 16,
@@ -61,31 +65,36 @@ export const commonStyles = StyleSheet.create({
     {
         height: 40 + 0.4 * 16,
     },
+    // Save/Cancel on the add/edit views: submitButtonContent + 0.1rem.
+    formActionButtonContent:
+    {
+        height: 40 + 0.5 * 16,
+    },
     searchBar:
     {
         width: '100%',
         borderRadius: 8,
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         ...surfaceBorder,
     }
-});
+}));
 
-export const dashboardScreenStyles = StyleSheet.create({
+export const dashboardScreenStyles = themedStyles(() => StyleSheet.create({
     scrollView: {
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
         paddingHorizontal: 32,
         paddingVertical: 32,
     },
     content: {
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
         paddingTop: 64,
         gap: 4,
     },
-});
+}));
 
-export const quickActionsGridStyles = StyleSheet.create({
+export const quickActionsGridStyles = themedStyles(() => StyleSheet.create({
     container: {
         width: '100%',
         marginTop: 24,
@@ -94,7 +103,7 @@ export const quickActionsGridStyles = StyleSheet.create({
     card: {
         width: '100%',
         gap: 16,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: palette.background,
         borderRadius: 16,
         paddingVertical: 16,
         paddingHorizontal: 0,
@@ -132,7 +141,7 @@ export const quickActionsGridStyles = StyleSheet.create({
     iconWrapper: {
         alignSelf: 'center',
         borderRadius: 12,
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         ...surfaceBorder,
         alignItems: 'center',
         justifyContent: 'center',
@@ -147,4 +156,4 @@ export const quickActionsGridStyles = StyleSheet.create({
         fontSize: 12 + 0.1 * 16,
         textAlign: 'center',
     },
-});
+}));

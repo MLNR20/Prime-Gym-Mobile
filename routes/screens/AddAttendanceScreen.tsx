@@ -4,6 +4,7 @@ import DetailsNavbar from '../../components/DetailsNavbar';
 import type { AttendanceRecord } from '../../models/AttendanceRecord';
 import type { LockerKey } from '../../models/LockerKey';
 import type { Member } from '../../models/Member';
+import { palette, themedStyles } from '../../utils/theme';
 
 type AddAttendanceScreenProps = {
     editingRecord: AttendanceRecord | null;
@@ -36,13 +37,13 @@ export default function AddAttendanceScreen({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         paddingHorizontal: 32,
         paddingVertical: 24,
     },
-});
+}));

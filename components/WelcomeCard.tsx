@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from 'react-native-paper';
+import { themedStyles } from '../utils/theme';
 
 export default function WelcomeCard({ membershipId }: { membershipId: string }) {
     const [visible, setVisible] = useState(true);
@@ -44,7 +45,7 @@ export default function WelcomeCard({ membershipId }: { membershipId: string }) 
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     card: {
         width: '100%',
         marginTop: 12,
@@ -82,4 +83,4 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         minWidth: 0,
     },
-});
+}));

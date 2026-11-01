@@ -1,8 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { Text, TextInput, type TextInputProps } from 'react-native-paper';
+import { palette, themedStyles } from '../utils/theme';
 
-const GRAY = '#F2F5F7';
-const ERROR_RED = '#DC2626';
 
 export function FormLabel({ children }: { children: string }) {
     return <Text style={styles.label}>{children}</Text>;
@@ -21,13 +20,13 @@ export default function FormTextInput({
             <FormLabel>{label}</FormLabel>
             <TextInput
                 mode="outlined"
-                outlineColor={errorMessage ? ERROR_RED : GRAY}
-                activeOutlineColor={errorMessage ? ERROR_RED : '#F59E0B'}
-                textColor="#111827"
+                outlineColor={errorMessage ? palette.danger : palette.surface}
+                activeOutlineColor={errorMessage ? palette.danger : '#F59E0B'}
+                textColor={palette.inputText}
                 outlineStyle={styles.outline}
                 style={[styles.input, style]}
                 placeholder={label}
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor={palette.subtle}
                 error={!!errorMessage}
                 {...props}
             />
@@ -40,35 +39,30 @@ export default function FormTextInput({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     field: {
         width: '100%',
         gap: 6,
     },
     label: {
-        fontSize: 14,
+        fontSize: 15.76, // 0.875rem + 0.01rem + 0.1rem
         fontFamily: 'Poppins_700Bold',
-        color: '#3F2D00',
+        color: palette.text,
     },
     input: {
         width: '100%',
-        backgroundColor: GRAY,
+        backgroundColor: palette.surface,
         fontSize: 16,
     },
     outline: {
         borderRadius: 8,
     },
     errorBox: {
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#FECACA',
-        backgroundColor: '#FEE2E2',
-        paddingHorizontal: 12,
-        paddingVertical: 8,
+        paddingHorizontal: 4,
     },
     errorText: {
-        color: '#B91C1C',
+        color: palette.dangerText,
         fontSize: 12,
         fontFamily: 'Poppins_500Medium',
     },
-});
+}));

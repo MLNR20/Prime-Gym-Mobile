@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import type { AttendanceRecord } from '../models/AttendanceRecord';
 import type { LockerKey } from '../models/LockerKey';
 import type { Member } from '../models/Member';
 import { fromInputTimestamp, nowInPhilippineTime, toInputTimestamp } from '../utils/dateTime';
-import { commonStyles } from './commonStyles';
 import FormSelect from './FormSelect';
+import FormActions from './FormActions';
 import FormTextInput from './FormTextInput';
+import { palette, themedStyles } from '../utils/theme';
 
 export type AttendanceFormValues = {
     member_id: string;
@@ -90,36 +91,17 @@ export default function AttendanceForm({ editingRecord, members, lockerKeys, onS
             />
             {formError && <Text style={styles.error}>{formError}</Text>}
 
-            <View style={styles.actions}>
-                {editingRecord && (
-                    <Button mode="text" textColor="#6B7280" onPress={onCancel}>
-                        Cancel
-                    </Button>
-                )}
-                <Button
-                    mode="contained"
-                    textColor="#fff"
-                    contentStyle={commonStyles.submitButtonContent}
-                    onPress={handleSubmit}
-                    style={commonStyles.submitButton}
-                >
-                    {editingRecord ? 'Save' : 'Add'}
-                </Button>
-            </View>
+            <FormActions submitLabel={editingRecord ? 'Save' : 'Add'} onSubmit={handleSubmit} onCancel={editingRecord ? onCancel : undefined} />
         </View>
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     container: {
         width: '100%',
         gap: 20,
     },
     error: {
-        color: '#B91C1C',
+        color: palette.dangerText,
     },
-    actions: {
-        width: '100%',
-        gap: 8,
-    },
-});
+}));

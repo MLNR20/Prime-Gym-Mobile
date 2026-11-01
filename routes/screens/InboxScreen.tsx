@@ -3,6 +3,7 @@ import { IconButton } from "react-native-paper";
 import SearchNavbar from "../../components/SearchNavbar";
 import NotificationListCard from "../../components/NotificationListCard";
 import { useNotificationsViewModel } from "../../viewmodels/useNotificationsViewModel";
+import { palette, themedStyles } from '../../utils/theme';
 
 // Top-level tab: the right-hand navbar button marks everything read; tapping a row toggles read/unread.
 export default function InboxScreen() {
@@ -39,7 +40,7 @@ export default function InboxScreen() {
               <IconButton
                 icon="trash-can-outline"
                 size={22}
-                iconColor="#C4C7CC"
+                iconColor={palette.iconMuted}
                 onPress={() => removeNotification(item)}
                 style={styles.action}
               />
@@ -51,10 +52,10 @@ export default function InboxScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: palette.background,
   },
   content: {
     flex: 1,
@@ -69,4 +70,4 @@ const styles = StyleSheet.create({
   action: {
     margin: 0,
   },
-});
+}));

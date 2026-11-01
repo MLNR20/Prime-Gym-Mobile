@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
 import type { Member, MembershipPlan } from '../models/Member';
 import { inputDateToIso, isoToInputDate, maskInputDate } from '../utils/dateTime';
-import { commonStyles } from './commonStyles';
+import { usePlanNames } from '../viewmodels/usePlansViewModel';
 import FormSelect from './FormSelect';
+import FormActions from './FormActions';
 import FormTextInput from './FormTextInput';
-
-const PLAN_OPTIONS = (['Basic', 'Standard', 'Premium'] as const).map((plan) => ({ value: plan, label: plan }));
 
 export type MemberFormValues = {
     first_name: string;
@@ -30,7 +28,9 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
     const [paymentDate, setPaymentDate] = useState('');
     const [paymentAmount, setPaymentAmount] = useState('');
     const [subscriptionExpirationDate, setSubscriptionExpirationDate] = useState('');
-    const [plan, setPlan] = useState<MembershipPlan>('Basic');
+    const planNames = usePlanNames();
+    const defaultPlan = planNames[0] ?? 'Basic';
+    const [plan, setPlan] = useState<MembershipPlan>(defaultPlan);
     const [errors, setErrors] = useState<{ paymentDate?: string; expirationDate?: string }>({});
 
     useEffect(() => {
@@ -40,8 +40,16 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
         setPaymentDate(editingMember ? isoToInputDate(editingMember.payment_date) : '');
         setPaymentAmount(editingMember?.payment_amount ? String(editingMember.payment_amount) : '');
         setSubscriptionExpirationDate(editingMember ? isoToInputDate(editingMember.subscription_expiration_date) : '');
-        setPlan(editingMember?.plan ?? 'Basic');
+        setPlan(editingMember?.plan ?? defaultPlan);
     }, [editingMember]);
+
+    // The plans load asynchronously, so a new subscriber's default follows them until a plan is picked.
+    useEffect(() => {
+        if (!editingMember) setPlan(defaultPlan);
+    }, [defaultPlan]);
+
+    // A subscriber's current plan stays selectable even if it has since been removed from Settings.
+    const planOptions = [...new Set([...planNames, plan])].map((name) => ({ value: name, label: name }));
 
     const handleSubmit = () => {
         const trimmedFirstName = firstName.trim();
@@ -70,7 +78,7 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
             setPaymentDate('');
             setPaymentAmount('');
             setSubscriptionExpirationDate('');
-            setPlan('Basic');
+            setPlan(defaultPlan);
         }
     };
 
@@ -109,25 +117,9 @@ export default function MemberForm({ editingMember, onSubmit, onCancel }: Member
                 }}
                 errorMessage={errors.expirationDate}
             />
-            <FormSelect label="Plan" value={plan} options={PLAN_OPTIONS} onChange={setPlan} />
+            <FormSelect label="Plan" value={plan} options={planOptions} onChange={setPlan} />
 
-            <View style={styles.actions}>
-                <Button mode="contained" textColor="#fff" contentStyle={commonStyles.submitButtonContent} labelStyle={styles.buttonLabel} onPress={handleSubmit} style={commonStyles.submitButton}>
-                    {editingMember ? 'Save' : 'Add'}
-                </Button>
-                {editingMember && (
-                    <Button
-                        mode="outlined"
-                        textColor="#6B7280"
-                        contentStyle={commonStyles.submitButtonContent}
-                        labelStyle={styles.buttonLabel}
-                        onPress={onCancel}
-                        style={styles.cancelButton}
-                    >
-                        Cancel
-                    </Button>
-                )}
-            </View>
+            <FormActions submitLabel={editingMember ? 'Save' : 'Add'} onSubmit={handleSubmit} onCancel={editingMember ? onCancel : undefined} />
         </View>
     );
 }
@@ -136,20 +128,5 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         gap: 20,
-    },
-    actions: {
-        width: '100%',
-        gap: 16,
-    },
-    // Paper's default button label is 14px; +0.2rem (3.2px).
-    buttonLabel: {
-        fontSize: 17.2,
-        lineHeight: 24,
-    },
-    cancelButton: {
-        width: '100%',
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#000000',
     },
 });

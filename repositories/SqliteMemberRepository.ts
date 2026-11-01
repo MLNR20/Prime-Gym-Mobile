@@ -11,6 +11,7 @@ function fromRow(row: Record<string, unknown>): Member {
         payment_amount: Number(row.payment_amount ?? 0),
         subscription_expiration_date: row.subscription_expiration_date as string,
         plan: row.plan as Member['plan'],
+        program_id: (row.program_id as string | undefined) ?? '',
         date_created: row.date_created as string,
         date_updated: row.date_updated as string,
         is_deleted: Boolean(row.is_deleted),

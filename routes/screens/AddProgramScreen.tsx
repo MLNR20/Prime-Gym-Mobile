@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import ProgramForm, { type ProgramFormValues } from '../../components/ProgramForm';
 import DetailsNavbar from '../../components/DetailsNavbar';
 import type { Program } from '../../models/Program';
+import { palette, themedStyles } from '../../utils/theme';
 
 type AddProgramScreenProps = {
     editingProgram: Program | null;
@@ -20,13 +21,13 @@ export default function AddProgramScreen({ editingProgram, onSubmit, onCancel }:
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         paddingHorizontal: 32,
         paddingVertical: 24,
     },
-});
+}));

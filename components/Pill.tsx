@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
+import { palette } from '../utils/theme';
 
 type PillVariant = 'success' | 'warning' | 'danger';
 
@@ -8,14 +9,16 @@ type PillProps = {
     variant: PillVariant;
 };
 
-const VARIANT_COLORS: Record<PillVariant, { background: string; text: string }> = {
-    success: { background: '#DCFCE7', text: '#15803D' },
-    warning: { background: '#FEF3C7', text: '#B45309' },
-    danger: { background: '#FEE2E2', text: '#B91C1C' },
-};
+// A function so the colors follow the current scheme instead of being fixed when the module loads.
+const variantColors = (variant: PillVariant): { background: string; text: string } =>
+    ({
+        success: { background: palette.okBg, text: palette.ok },
+        warning: { background: palette.warnBg, text: palette.warnText },
+        danger: { background: palette.dangerBg, text: palette.dangerText },
+    })[variant];
 
 export default function Pill({ label, variant }: PillProps) {
-    const colors = VARIANT_COLORS[variant];
+    const colors = variantColors(variant);
     return (
         <View style={[styles.pill, { backgroundColor: colors.background }]}>
             <Text style={{ color: colors.text, fontFamily: 'Poppins_500Medium' }} className="font-poppins-medium text-[0.775rem]">

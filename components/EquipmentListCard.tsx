@@ -4,6 +4,7 @@ import { ActivityIndicator, List, Searchbar, Text } from 'react-native-paper';
 import type { Equipment } from '../models/Equipment';
 import { commonStyles } from './commonStyles';
 import EquipmentStatusPill from './EquipmentStatusPill';
+import { palette, themedStyles } from '../utils/theme';
 
 type EquipmentListCardProps = {
     equipment: Equipment[];
@@ -32,7 +33,7 @@ export default function EquipmentListCard({
     return (
         <View style={[commonStyles.listView, styles.flexFill]}>
             {showSearchBar && (
-                <Searchbar placeholder="Search equipment" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor="#9CA3AF" iconColor="#C4C7CC" value={query} />
+                <Searchbar placeholder="Search equipment" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor={palette.subtle} iconColor={palette.iconMuted} value={query} />
             )}
             {loading && <ActivityIndicator style={styles.spinner} />}
             {!loading && error && (
@@ -67,7 +68,7 @@ export default function EquipmentListCard({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     flexFill: {
         flex: 1,
     },
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
     },
     itemTitle: commonStyles.cardTitle,
     itemDescription: {
-        color: '#5C4300',
+        color: palette.brown,
     },
     descriptionRow: {
         flexDirection: 'row',
@@ -87,4 +88,4 @@ const styles = StyleSheet.create({
     spinner: {
         paddingVertical: 12,
     },
-});
+}));

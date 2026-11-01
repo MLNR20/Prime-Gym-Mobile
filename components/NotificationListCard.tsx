@@ -4,6 +4,7 @@ import { ActivityIndicator, List, Text } from 'react-native-paper';
 import type { Notification } from '../models/Notification';
 import { formatPhilippineTimestamp } from '../utils/dateTime';
 import { commonStyles } from './commonStyles';
+import { palette, themedStyles } from '../utils/theme';
 
 type NotificationListCardProps = {
     notifications: Notification[];
@@ -67,7 +68,7 @@ export default function NotificationListCard({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     flexFill: {
         flex: 1,
     },
@@ -77,23 +78,23 @@ const styles = StyleSheet.create({
     itemTitle: commonStyles.cardTitle,
     itemTitleRead: {
         fontFamily: 'Poppins_600SemiBold',
-        color: '#6B7280',
+        color: palette.muted,
     },
     cardRead: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: palette.background,
     },
     itemDescription: {
-        color: '#5C4300',
+        color: palette.brown,
     },
     descriptionGroup: {
         gap: 4,
         marginTop: 4,
     },
     subheader: {
-        color: '#374151',
+        color: palette.bodyText,
     },
     timestamp: {
-        color: '#9CA3AF',
+        color: palette.subtle,
     },
     dotWrapper: {
         width: 12,
@@ -113,4 +114,4 @@ const styles = StyleSheet.create({
     spinner: {
         paddingVertical: 12,
     },
-});
+}));

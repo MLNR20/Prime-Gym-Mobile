@@ -8,6 +8,7 @@ import type { LockerKeyFormValues } from "../../components/LockerKeyForm";
 import LockerKeyListCard from "../../components/LockerKeyListCard";
 import type { LockerKey } from "../../models/LockerKey";
 import { useLockerKeysViewModel } from "../../viewmodels/useLockerKeysViewModel";
+import { palette, themedStyles } from '../../utils/theme';
 
 type LockerKeysScreenProps = {
   onBack: () => void;
@@ -87,7 +88,7 @@ export default function LockerKeysScreen({ onBack }: LockerKeysScreenProps) {
             showSearchBar={false}
             onItemPress={(lockerKey) => setViewingLockerKey(lockerKey)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor={palette.iconMuted} style={styles.chevron} />
             )}
           />
         </View>
@@ -96,10 +97,10 @@ export default function LockerKeysScreen({ onBack }: LockerKeysScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: palette.background,
   },
   content: {
     flex: 1,
@@ -114,4 +115,4 @@ const styles = StyleSheet.create({
   chevron: {
     margin: 0,
   },
-});
+}));

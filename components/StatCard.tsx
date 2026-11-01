@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
+import { palette, themedStyles } from '../utils/theme';
 
 type StatCardProps = {
     label: string;
@@ -19,30 +20,30 @@ export default function StatCard({ label, value, hint }: StatCardProps) {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     card: {
         flex: 1,
         minWidth: 140,
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         borderWidth: 2,
-        borderColor: '#EDF0F2',
+        borderColor: palette.border,
         borderRadius: 12,
         padding: 16,
         gap: 4,
     },
     label: {
-        color: '#000000',
+        color: palette.text,
         fontSize: 12,
         fontFamily: 'Poppins_400Regular',
     },
     value: {
-        color: '#000000',
+        color: palette.text,
         fontSize: 22,
         fontFamily: 'Poppins_700Bold',
     },
     hint: {
-        color: '#6B7280',
+        color: palette.muted,
         fontSize: 12,
         fontFamily: 'Poppins_400Regular',
     },
-});
+}));

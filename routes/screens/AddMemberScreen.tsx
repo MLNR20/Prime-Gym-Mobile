@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import MemberForm, { type MemberFormValues } from '../../components/MemberForm';
 import DetailsNavbar from '../../components/DetailsNavbar';
 import type { Member } from '../../models/Member';
+import { palette, themedStyles } from '../../utils/theme';
 
 type AddMemberScreenProps = {
     editingMember: Member | null;
@@ -20,13 +21,13 @@ export default function AddMemberScreen({ editingMember, onSubmit, onCancel }: A
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         paddingHorizontal: 32,
         paddingVertical: 24,
     },
-});
+}));

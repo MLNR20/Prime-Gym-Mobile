@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
+import { palette, themedStyles } from '../utils/theme';
 
 type BreakdownRowProps = {
     label: string;
@@ -25,7 +26,7 @@ export default function BreakdownRow({ label, value, fraction, color = '#F59E0B'
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     row: {
         gap: 8,
         paddingVertical: 12,
@@ -37,23 +38,23 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     label: {
-        color: '#000000',
+        color: palette.text,
         fontSize: 14,
         fontFamily: 'Poppins_500Medium',
     },
     value: {
-        color: '#000000',
+        color: palette.text,
         fontSize: 14,
         fontFamily: 'Poppins_400Regular',
     },
     track: {
         height: 8,
         borderRadius: 4,
-        backgroundColor: '#E5E7EB',
+        backgroundColor: palette.divider,
         overflow: 'hidden',
     },
     fill: {
         height: 8,
         borderRadius: 4,
     },
-});
+}));

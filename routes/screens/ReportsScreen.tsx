@@ -8,15 +8,17 @@ import { formatPeso } from '../../utils/currency';
 import { summarizeSubscribers } from '../../utils/finance';
 import { MEMBER_STATUS_LABELS, type MemberStatus } from '../../utils/memberStatus';
 import { useSubscribersViewModel } from '../../viewmodels/useSubscribersViewModel';
+import { palette, themedStyles } from '../../utils/theme';
 
 type ReportsScreenProps = {
     onBack: () => void;
 };
 
-const STATUSES: { status: MemberStatus; color: string }[] = [
-    { status: 'active', color: '#15803D' },
-    { status: 'expired', color: '#B45309' },
-    { status: 'inactive', color: '#B91C1C' },
+// A function so the colors follow the current scheme instead of being fixed when the module loads.
+const getStatuses = (): { status: MemberStatus; color: string }[] => [
+    { status: 'active', color: palette.ok },
+    { status: 'expired', color: palette.warnText },
+    { status: 'inactive', color: palette.dangerText },
 ];
 
 export default function ReportsScreen({ onBack }: ReportsScreenProps) {
@@ -38,7 +40,7 @@ export default function ReportsScreen({ onBack }: ReportsScreenProps) {
 
                     <Text style={styles.sectionTitle}>By Status</Text>
                     <View style={styles.table}>
-                        {STATUSES.map(({ status, color }) => (
+                        {getStatuses().map(({ status, color }) => (
                             <BreakdownRow
                                 key={status}
                                 label={MEMBER_STATUS_LABELS[status]}
@@ -66,10 +68,10 @@ export default function ReportsScreen({ onBack }: ReportsScreenProps) {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         paddingHorizontal: 32,
@@ -84,22 +86,22 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         marginTop: 12,
-        color: '#000000',
+        color: palette.text,
         fontSize: 16,
         fontFamily: 'Poppins_700Bold',
     },
     table: {
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         borderWidth: 2,
-        borderColor: '#EDF0F2',
+        borderColor: palette.border,
         borderRadius: 12,
         paddingHorizontal: 16,
     },
     message: {
-        color: '#5C4300',
+        color: palette.brown,
         fontFamily: 'Poppins_400Regular',
     },
     spinner: {
         paddingVertical: 12,
     },
-});
+}));

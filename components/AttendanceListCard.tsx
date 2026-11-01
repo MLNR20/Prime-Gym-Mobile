@@ -4,6 +4,7 @@ import { ActivityIndicator, List, Text } from 'react-native-paper';
 import type { AttendanceRecord } from '../models/AttendanceRecord';
 import { formatPhilippineTimestamp } from '../utils/dateTime';
 import { commonStyles } from './commonStyles';
+import { palette, themedStyles } from '../utils/theme';
 
 export type AttendanceRow = AttendanceRecord & {
     memberName: string;
@@ -62,7 +63,7 @@ export default function AttendanceListCard({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     flexFill: {
         flex: 1,
     },
@@ -75,13 +76,13 @@ const styles = StyleSheet.create({
         gap: 2,
     },
     detailText: {
-        color: '#5a3f00',
+        color: palette.brown,
         fontSize: 12,
     },
     message: {
-        color: '#5C4300',
+        color: palette.brown,
     },
     spinner: {
         paddingVertical: 12,
     },
-});
+}));

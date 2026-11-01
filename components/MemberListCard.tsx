@@ -5,6 +5,7 @@ import type { Member } from '../models/Member';
 import {commonStyles} from './commonStyles';
 import MemberStatusPill from './MemberStatusPill';
 import PaymentDateDivider from './PaymentDateDivider';
+import { palette, themedStyles } from '../utils/theme';
 
 type PaymentDateSection = {
     title: string;
@@ -53,7 +54,7 @@ export default function MemberListCard({
     return (
         <View style={[commonStyles.listView, styles.flexFill]}>
             {showSearchBar && (
-                <Searchbar placeholder="Search members" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor="#9CA3AF" iconColor="#C4C7CC" value={query} />
+                <Searchbar placeholder="Search members" onChangeText={onQueryChange} style={commonStyles.searchBar} placeholderTextColor={palette.subtle} iconColor={palette.iconMuted} value={query} />
             )}
             {loading && <ActivityIndicator style={styles.spinner} />}
             {!loading && error && (
@@ -94,11 +95,11 @@ export default function MemberListCard({
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     itemCard: {
-        backgroundColor: '#F2F5F7', // same as the search bar
+        backgroundColor: palette.surface, // same as the search bar
         borderWidth: 2,
-        borderColor: '#EDF0F2',
+        borderColor: palette.border,
     },
     flexFill: {
         flex: 1,
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
     },
     itemTitle: commonStyles.cardTitle,
     itemDescription: {
-        color: '#5C4300',
+        color: palette.brown,
     },
     descriptionRow: {
         flexDirection: 'row',
@@ -129,4 +130,4 @@ const styles = StyleSheet.create({
     spinner: {
         paddingVertical: 12,
     },
-});
+}));

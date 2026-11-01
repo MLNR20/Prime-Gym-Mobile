@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Divider, Text } from 'react-native-paper';
+import { detailsTypography } from './detailsTypography';
+import { palette, themedStyles } from '../utils/theme';
 
 export type DetailRowData = {
     label: string;
@@ -47,13 +49,13 @@ export default function DetailSection({ title, description, rows, header }: Deta
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     divider: {
-        backgroundColor: '#EDF0F2',
+        backgroundColor: palette.border,
     },
     headerDivider: {
         width: '100%',
-        backgroundColor: '#EDF0F2',
+        backgroundColor: palette.border,
     },
     card: {
         flexDirection: 'row',
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
         rowGap: 16,
         marginTop: 16,
         borderWidth: 2,
-        borderColor: '#EDF0F2',
+        borderColor: palette.border,
         borderRadius: 12,
         padding: 16,
     },
@@ -70,14 +72,12 @@ const styles = StyleSheet.create({
         gap: 2,
     },
     title: {
-        color: '#000000',
-        fontSize: 16,
-        fontFamily: 'Poppins_700Bold',
+        color: palette.text,
+        ...detailsTypography.sectionTitle,
     },
     description: {
-        color: '#6B7280',
-        fontSize: 13.6,
-        fontFamily: 'Poppins_400Regular',
+        color: palette.muted,
+        ...detailsTypography.sectionDescription,
     },
     row: {
         width: '50%',
@@ -88,12 +88,11 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     rowLabel: {
-        color: '#6B7280',
-        fontSize: 12,
-        fontFamily: 'Poppins_600SemiBold',
+        color: palette.muted,
+        ...detailsTypography.label,
     },
     rowValue: {
-        color: '#000000',
-        fontSize: 16,
+        color: palette.text,
+        ...detailsTypography.value,
     },
-});
+}));

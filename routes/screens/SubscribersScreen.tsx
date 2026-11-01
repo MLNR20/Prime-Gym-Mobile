@@ -8,6 +8,7 @@ import type { MemberFormValues } from "../../components/MemberForm";
 import MemberListCard from "../../components/MemberListCard";
 import type { Member } from "../../models/Member";
 import { useSubscribersViewModel } from "../../viewmodels/useSubscribersViewModel";
+import { palette, themedStyles } from '../../utils/theme';
 
 type SubscribersScreenProps = {
   onBack: () => void;
@@ -88,7 +89,7 @@ export default function SubscribersScreen({ onBack }: SubscribersScreenProps) {
             showSearchBar={false}
             onItemPress={(member) => setViewingMember(member)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor={palette.iconMuted} style={styles.chevron} />
             )}
           />
         </View>
@@ -97,10 +98,10 @@ export default function SubscribersScreen({ onBack }: SubscribersScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: palette.background,
   },
   content: {
     flex: 1,
@@ -115,4 +116,4 @@ const styles = StyleSheet.create({
   chevron: {
     margin: 0,
   },
-});
+}));

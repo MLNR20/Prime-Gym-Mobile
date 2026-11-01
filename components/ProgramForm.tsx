@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
 import type { Program } from '../models/Program';
-import { commonStyles } from './commonStyles';
+import FormActions from './FormActions';
 import FormTextInput from './FormTextInput';
 
 export type ProgramFormValues = {
@@ -53,16 +52,7 @@ export default function ProgramForm({ editingProgram, onSubmit, onCancel }: Prog
             />
             <FormTextInput label="Description" value={description} onChangeText={setDescription} multiline />
 
-            <View style={styles.actions}>
-                {editingProgram && (
-                    <Button mode="text" textColor="#6B7280" onPress={onCancel}>
-                        Cancel
-                    </Button>
-                )}
-                <Button mode="contained" textColor="#fff" contentStyle={commonStyles.submitButtonContent} onPress={handleSubmit} style={commonStyles.submitButton}>
-                    {editingProgram ? 'Save' : 'Add'}
-                </Button>
-            </View>
+            <FormActions submitLabel={editingProgram ? 'Save' : 'Add'} onSubmit={handleSubmit} onCancel={editingProgram ? onCancel : undefined} />
         </View>
     );
 }
@@ -71,9 +61,5 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         gap: 20,
-    },
-    actions: {
-        width: '100%',
-        gap: 8,
     },
 });

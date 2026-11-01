@@ -2,6 +2,7 @@ import { useState } from "react";
 import { LayoutChangeEvent, Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { quickActionsGridStyles as styles } from "./commonStyles";
+import { palette } from "../utils/theme";
 
 type QuickAction = {
   key: string;
@@ -53,7 +54,7 @@ export default function QuickActionsGrid({
 
   return (
     <View style={styles.container}>
-      <Text className="text-lg font-poppins-bold text-black">Services</Text>
+      <Text className="text-lg font-poppins-bold" style={{ color: palette.text }}>Services</Text>
       <View style={styles.card}>
         {rows.map((row, rowIndex) => (
           <View key={rowIndex} style={styles.row}>
@@ -90,8 +91,8 @@ export default function QuickActionsGrid({
                   </View>
                   <View style={styles.labelContainer}>
                     <Text
-                      className="font-poppins-semibold text-black"
-                      style={styles.label}
+                      className="font-poppins-semibold"
+                      style={[styles.label, { color: palette.text }]}
                       numberOfLines={1}
                       adjustsFontSizeToFit
                       minimumFontScale={0.8}

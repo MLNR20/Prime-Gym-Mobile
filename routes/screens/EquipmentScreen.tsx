@@ -8,6 +8,7 @@ import type { EquipmentFormValues } from "../../components/EquipmentForm";
 import EquipmentListCard from "../../components/EquipmentListCard";
 import type { Equipment } from "../../models/Equipment";
 import { useEquipmentViewModel } from "../../viewmodels/useEquipmentViewModel";
+import { palette, themedStyles } from '../../utils/theme';
 
 type EquipmentScreenProps = {
   onBack: () => void;
@@ -87,7 +88,7 @@ export default function EquipmentScreen({ onBack }: EquipmentScreenProps) {
             showSearchBar={false}
             onItemPress={(item) => setViewingEquipment(item)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor={palette.iconMuted} style={styles.chevron} />
             )}
           />
         </View>
@@ -96,10 +97,10 @@ export default function EquipmentScreen({ onBack }: EquipmentScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: palette.background,
   },
   content: {
     flex: 1,
@@ -114,4 +115,4 @@ const styles = StyleSheet.create({
   chevron: {
     margin: 0,
   },
-});
+}));

@@ -1,4 +1,5 @@
 import { openDatabaseAsync, type SQLiteDatabase } from 'expo-sqlite';
+import { generateId } from '../utils/generateId';
 
 let dbPromise: Promise<SQLiteDatabase> | null = null;
 
@@ -12,6 +13,7 @@ const MEMBERS_COLUMNS: [name: string, definition: string][] = [
     ['payment_amount', 'REAL NOT NULL DEFAULT 0'],
     ['subscription_expiration_date', "TEXT NOT NULL DEFAULT ''"],
     ['plan', "TEXT NOT NULL DEFAULT 'Basic'"],
+    ['program_id', "TEXT NOT NULL DEFAULT ''"],
     ['date_created', "TEXT NOT NULL DEFAULT ''"],
     ['date_updated', "TEXT NOT NULL DEFAULT ''"],
     ['is_deleted', 'INTEGER NOT NULL DEFAULT 0'],
@@ -27,6 +29,7 @@ function createMembersTableSql(table: string): string {
             payment_amount REAL NOT NULL DEFAULT 0,
             subscription_expiration_date TEXT NOT NULL,
             plan TEXT NOT NULL,
+            program_id TEXT NOT NULL DEFAULT '',
             date_created TEXT NOT NULL,
             date_updated TEXT NOT NULL,
             is_deleted INTEGER NOT NULL DEFAULT 0
@@ -343,13 +346,49 @@ async function migrateMembersTable(db: SQLiteDatabase): Promise<void> {
         BEGIN;
         DROP TABLE IF EXISTS members_new;
         ${createMembersTableSql('members_new')}
-        INSERT INTO members_new (id, first_name, last_name, payment_date, payment_amount, subscription_expiration_date, plan, date_created, date_updated, is_deleted)
-        SELECT id, ${firstName}, ${lastName}, payment_date, payment_amount, subscription_expiration_date, plan, date_created, date_updated, is_deleted
+        INSERT INTO members_new (id, first_name, last_name, payment_date, payment_amount, subscription_expiration_date, plan, program_id, date_created, date_updated, is_deleted)
+        SELECT id, ${firstName}, ${lastName}, payment_date, payment_amount, subscription_expiration_date, plan, program_id, date_created, date_updated, is_deleted
         FROM members;
         DROP TABLE members;
         ALTER TABLE members_new RENAME TO members;
         COMMIT;
     `);
+}
+
+function createPlansTableSql(table: string): string {
+    return `
+        CREATE TABLE IF NOT EXISTS ${table} (
+            id TEXT PRIMARY KEY NOT NULL,
+            name TEXT NOT NULL,
+            price REAL NOT NULL DEFAULT 0,
+            duration_months INTEGER NOT NULL DEFAULT 1,
+            date_created TEXT NOT NULL,
+            date_updated TEXT NOT NULL
+        );
+    `;
+}
+
+const DEFAULT_PLAN_NAMES = ['Basic', 'Standard', 'Premium'];
+
+/** Creates `membership_plans` and, the first time only, seeds the three plans subscribers could already pick. */
+async function ensurePlansTable(db: SQLiteDatabase): Promise<void> {
+    const existing = await db.getFirstAsync<{ name: string }>(
+        `SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'membership_plans'`
+    );
+    await db.execAsync(createPlansTableSql('membership_plans'));
+    if (existing) return;
+    const now = Date.now();
+    for (const [index, name] of DEFAULT_PLAN_NAMES.entries()) {
+        // Staggered timestamps keep the seeded plans in their natural order.
+        const timestamp = new Date(now + index * 1000).toISOString();
+        await db.runAsync(
+            `INSERT INTO membership_plans (id, name, price, duration_months, date_created, date_updated) VALUES (?, ?, 0, 1, ?, ?)`,
+            generateId(),
+            name,
+            timestamp,
+            timestamp
+        );
+    }
 }
 
 /** Opens (once) the on-device database and ensures tables used by the SQLite repositories exist. */
@@ -374,6 +413,7 @@ export function getDb(): Promise<SQLiteDatabase> {
             await migrateExercisesTable(db);
             await db.execAsync(createNotificationsTableSql('notifications'));
             await migrateNotificationsTable(db);
+            await ensurePlansTable(db);
             return db;
         });
     }

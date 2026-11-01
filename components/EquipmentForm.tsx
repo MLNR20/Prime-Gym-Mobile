@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Switch, Text } from 'react-native-paper';
 import type { Equipment } from '../models/Equipment';
-import { commonStyles } from './commonStyles';
-import FormTextInput, { FormLabel } from './FormTextInput';
+import FormSelect from './FormSelect';
+import FormActions from './FormActions';
+import FormTextInput from './FormTextInput';
 
 export type EquipmentFormValues = {
     title: string;
@@ -15,6 +15,13 @@ type EquipmentFormProps = {
     onSubmit: (values: EquipmentFormValues) => void;
     onCancel: () => void;
 };
+
+type EquipmentStatus = 'active' | 'inactive';
+
+const STATUS_OPTIONS: { value: EquipmentStatus; label: string }[] = [
+    { value: 'active', label: 'Active' },
+    { value: 'inactive', label: 'Inactive' },
+];
 
 export default function EquipmentForm({ editingEquipment, onSubmit, onCancel }: EquipmentFormProps) {
     const [title, setTitle] = useState('');
@@ -38,21 +45,14 @@ export default function EquipmentForm({ editingEquipment, onSubmit, onCancel }: 
     return (
         <View style={styles.container}>
             <FormTextInput label="Equipment Title" value={title} onChangeText={setTitle} />
-            <View style={styles.switchRow}>
-                <Text>Active</Text>
-                <Switch value={isActive} onValueChange={setIsActive} />
-            </View>
+            <FormSelect
+                label="Status"
+                value={isActive ? 'active' : 'inactive'}
+                options={STATUS_OPTIONS}
+                onChange={(value) => setIsActive(value === 'active')}
+            />
 
-            <View style={styles.actions}>
-                {editingEquipment && (
-                    <Button mode="text" textColor="#6B7280" onPress={onCancel}>
-                        Cancel
-                    </Button>
-                )}
-                <Button mode="contained" textColor="#fff" contentStyle={commonStyles.submitButtonContent} onPress={handleSubmit} style={commonStyles.submitButton}>
-                    {editingEquipment ? 'Save' : 'Add'}
-                </Button>
-            </View>
+            <FormActions submitLabel={editingEquipment ? 'Save' : 'Add'} onSubmit={handleSubmit} onCancel={editingEquipment ? onCancel : undefined} />
         </View>
     );
 }
@@ -61,15 +61,5 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         gap: 20,
-    },
-    switchRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 4,
-    },
-    actions: {
-        width: '100%',
-        gap: 8,
     },
 });

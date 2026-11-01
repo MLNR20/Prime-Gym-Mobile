@@ -4,8 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Switch } from 'react-native-paper';
 import { dashboardScreenStyles, surfaceBorder } from '../../components/commonStyles';
 import { rem } from '../../utils/rem';
+import { usePlanNames } from '../../viewmodels/usePlansViewModel';
+import ExportDataScreen from './ExportDataScreen';
+import GymProfileScreen from './GymProfileScreen';
+import PlansScreen from './PlansScreen';
+import { palette, themedStyles, useAppTheme } from '../../utils/theme';
 
-// UI mockup: the toggles only hold local state for now and are not saved or wired to anything.
+// Only the Dark Mode toggle is wired up; the others hold local state for now. Gym Profile, Membership Plans and Export Data open real screens.
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -48,19 +53,27 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
     );
 }
 
-const Chevron = () => <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />;
+const Chevron = () => <Ionicons name="chevron-forward" size={18} color={palette.subtle} />;
 const Value = ({ children }: { children: string }) => <Text style={styles.value}>{children}</Text>;
 
 export default function SettingsScreen() {
+    const [view, setView] = useState<'settings' | 'gym' | 'plans' | 'export'>('settings');
+    const planNames = usePlanNames();
     const [pushAlerts, setPushAlerts] = useState(true);
     const [expiryAlerts, setExpiryAlerts] = useState(true);
     const [dailySummary, setDailySummary] = useState(false);
     const [cloudBackup, setCloudBackup] = useState(true);
-    const [darkMode, setDarkMode] = useState(false);
+    // Dark mode is the one toggle that is real: it is saved and restyles the whole app.
+    const { isDark, setScheme } = useAppTheme();
 
     const toggle = (value: boolean, onValueChange: (next: boolean) => void) => (
         <Switch value={value} onValueChange={onValueChange} color="#F59E0B" />
     );
+
+    const showSettings = () => setView('settings');
+    if (view === 'gym') return <GymProfileScreen onBack={showSettings} />;
+    if (view === 'plans') return <PlansScreen onBack={showSettings} />;
+    if (view === 'export') return <ExportDataScreen onBack={showSettings} />;
 
     return (
         <ScrollView style={dashboardScreenStyles.scrollView} contentContainerStyle={dashboardScreenStyles.content}>
@@ -73,18 +86,18 @@ export default function SettingsScreen() {
             </Section>
 
             <Section title="Gym">
-                <SettingsRow icon="business-outline" label="Gym Profile" description="Name and contact details" trailing={<Chevron />} onPress={() => {}} />
-                <SettingsRow icon="pricetags-outline" label="Membership Plans" description="Basic, Standard, Premium" trailing={<Chevron />} onPress={() => {}} />
+                <SettingsRow icon="business-outline" label="Gym Profile" description="Name and contact details" trailing={<Chevron />} onPress={() => setView('gym')} />
+                <SettingsRow icon="pricetags-outline" label="Membership Plans" description={planNames.join(', ') || 'Add your plans'} trailing={<Chevron />} onPress={() => setView('plans')} />
                 <SettingsRow icon="card-outline" label="Payment Methods" description="Cash, GCash and bank" trailing={<Chevron />} onPress={() => {}} isLast />
             </Section>
 
             <Section title="Data">
                 <SettingsRow icon="cloud-upload-outline" label="Cloud Backup" description="Back up to Firestore" trailing={toggle(cloudBackup, setCloudBackup)} />
-                <SettingsRow icon="download-outline" label="Export Data" description="Subscribers and payments" trailing={<Chevron />} onPress={() => {}} isLast />
+                <SettingsRow icon="download-outline" label="Export Data" description="Subscribers and payments" trailing={<Chevron />} onPress={() => setView('export')} isLast />
             </Section>
 
             <Section title="Appearance">
-                <SettingsRow icon="moon-outline" label="Dark Mode" description="Darker color scheme" trailing={toggle(darkMode, setDarkMode)} />
+                <SettingsRow icon="moon-outline" label="Dark Mode" description="Darker color scheme" trailing={toggle(isDark, (next) => setScheme(next ? 'dark' : 'light'))} />
                 <SettingsRow icon="language-outline" label="Language" description="Display language" trailing={<Value>English</Value>} onPress={() => {}} isLast />
             </Section>
 
@@ -96,9 +109,9 @@ export default function SettingsScreen() {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     title: {
-        color: '#000000',
+        color: palette.text,
         fontSize: rem(1.45),
         fontFamily: 'Poppins_700Bold',
     },
@@ -108,13 +121,13 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     sectionTitle: {
-        color: '#000000',
+        color: palette.text,
         fontSize: rem(1.125),
         fontFamily: 'Poppins_700Bold',
     },
     sectionCard: {
         width: '100%',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: palette.background,
         paddingVertical: 6,
     },
     row: {
@@ -125,7 +138,7 @@ const styles = StyleSheet.create({
     },
     rowDivider: {
         borderBottomWidth: 1,
-        borderBottomColor: '#F2F5F7',
+        borderBottomColor: palette.surface,
     },
     rowPressed: {
         opacity: 0.7,
@@ -134,7 +147,7 @@ const styles = StyleSheet.create({
         width: 44,
         height: 44,
         borderRadius: 12,
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         ...surfaceBorder,
         alignItems: 'center',
         justifyContent: 'center',
@@ -144,18 +157,18 @@ const styles = StyleSheet.create({
         gap: 2,
     },
     label: {
-        color: '#000000',
+        color: palette.text,
         fontSize: rem(0.975),
         fontFamily: 'Poppins_700Bold',
     },
     description: {
-        color: '#6B7280',
+        color: palette.muted,
         fontSize: rem(0.95),
         fontFamily: 'Poppins_400Regular',
     },
     value: {
-        color: '#6B7280',
+        color: palette.muted,
         fontSize: rem(0.875),
         fontFamily: 'Poppins_500Medium',
     },
-});
+}));

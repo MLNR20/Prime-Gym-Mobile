@@ -4,11 +4,17 @@ import { Button, Text, TextInput } from 'react-native-paper';
 import FormTextInput from '../../components/FormTextInput';
 import { commonStyles } from '../../components/commonStyles';
 import { rem } from '../../utils/rem';
-import { signInWithEmail, signInWithGoogle } from '../../viewmodels/useAuthViewModel';
+import { signInWithEmail } from '../../viewmodels/useAuthViewModel';
+import { palette, themedStyles } from '../../utils/theme';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export default function LoginScreen() {
+type LoginScreenProps = {
+    onShowSignUp: () => void;
+    onShowForgotPassword: () => void;
+};
+
+export default function LoginScreen({ onShowSignUp, onShowForgotPassword }: LoginScreenProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -32,23 +38,11 @@ export default function LoginScreen() {
         }
     };
 
-    const handleGoogle = async () => {
-        setErrors({});
-        setSubmitting(true);
-        try {
-            // Same as email login: on success the auth listener in App swaps this screen out.
-            await signInWithGoogle();
-        } catch (err) {
-            setErrors({ form: (err as Error).message });
-        }
-        setSubmitting(false);
-    };
-
     return (
         <KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
                 <View style={styles.brand}>
-                    <Image source={require('../../assets/icon.png')} style={styles.logo} />
+                    <Image source={require('../../assets/prime-gym-logo.png')} style={styles.logo} resizeMode="cover" />
                     <Text style={styles.title}>Prime Gym</Text>
                     <Text style={styles.subtitle}>Sign in to manage your gym</Text>
                 </View>
@@ -84,11 +78,17 @@ export default function LoginScreen() {
                         right={
                             <TextInput.Icon
                                 icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                                color="#9CA3AF"
+                                color={palette.subtle}
                                 onPress={() => setShowPassword((current) => !current)}
                             />
                         }
                     />
+
+                    <View style={styles.forgotRow}>
+                        <Button mode="text" compact textColor="#F59E0B" labelStyle={styles.switchLabel} onPress={onShowForgotPassword}>
+                            Forgot password?
+                        </Button>
+                    </View>
 
                     {!!errors.form && (
                         <View style={styles.errorBox}>
@@ -96,49 +96,36 @@ export default function LoginScreen() {
                         </View>
                     )}
 
-                    <Button
-                        mode="contained"
-                        textColor="#fff"
-                        contentStyle={commonStyles.submitButtonContent}
-                        labelStyle={styles.buttonLabel}
-                        onPress={handleSubmit}
-                        loading={submitting}
-                        disabled={submitting}
-                        style={commonStyles.submitButton}
-                    >
-                        Log In
-                    </Button>
-                </View>
+                    <View style={styles.actions}>
+                        <Button
+                            mode="contained"
+                            textColor="#fff"
+                            contentStyle={commonStyles.submitButtonContent}
+                            onPress={handleSubmit}
+                            loading={submitting}
+                            disabled={submitting}
+                            style={commonStyles.submitButton}
+                        >
+                            Log In
+                        </Button>
 
-                <View style={styles.footer}>
-                    <View style={styles.dividerRow}>
-                        <View style={styles.dividerLine} />
-                        <Text style={styles.dividerText}>or</Text>
-                        <View style={styles.dividerLine} />
+                        <View style={styles.switchRow}>
+                            <Text style={styles.switchText}>New here?</Text>
+                            <Button mode="text" compact textColor="#F59E0B" labelStyle={styles.switchLabel} onPress={onShowSignUp}>
+                                Create an account
+                            </Button>
+                        </View>
                     </View>
-                    <Button
-                        mode="outlined"
-                        icon="google"
-                        textColor="#000000"
-                        contentStyle={commonStyles.submitButtonContent}
-                        labelStyle={styles.buttonLabel}
-                        onPress={handleGoogle}
-                        disabled={submitting}
-                        style={styles.googleButton}
-                    >
-                        Continue with Google
-                    </Button>
-                    <Text style={styles.footerNote}>New here? Continuing with Google creates your account.</Text>
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         flexGrow: 1,
@@ -151,20 +138,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 8,
     },
+    // The PNG is 1200x412, so the box is the same shape and the image fills it with no empty margin.
     logo: {
-        width: 80,
-        height: 80,
-        borderRadius: 20,
+        width: 240,
+        height: 82,
+        borderRadius: 8,
         marginBottom: 8,
     },
     title: {
-        color: '#000000',
-        fontSize: rem(1.45),
+        color: palette.text,
+        fontSize: rem(1.35),
         fontFamily: 'Poppins_700Bold',
     },
     subtitle: {
-        color: '#6B7280',
-        fontSize: rem(0.95),
+        color: palette.muted,
+        fontSize: rem(0.85),
         fontFamily: 'Poppins_400Regular',
     },
     form: {
@@ -172,53 +160,35 @@ const styles = StyleSheet.create({
         gap: 20,
     },
     errorBox: {
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#FECACA',
-        backgroundColor: '#FEE2E2',
-        paddingHorizontal: 12,
-        paddingVertical: 8,
+        paddingHorizontal: 4,
     },
     errorText: {
-        color: '#B91C1C',
+        color: palette.dangerText,
         fontSize: 12,
         fontFamily: 'Poppins_500Medium',
     },
-    footer: {
-        width: '100%',
-        gap: 16,
+    forgotRow: {
+        alignItems: 'flex-end',
+        marginTop: -12,
     },
-    dividerRow: {
+    // Log In button and the "New here?" row: 12px apart, 8px below the fields.
+    actions: {
+        gap: 12,
+        marginTop: 8,
+    },
+    switchRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
+        justifyContent: 'center',
+        gap: 4,
     },
-    dividerLine: {
-        flex: 1,
-        height: 1,
-        backgroundColor: '#E5E7EB',
-    },
-    dividerText: {
-        color: '#9CA3AF',
-        fontSize: 14,
-        fontFamily: 'Poppins_500Medium',
-    },
-    googleButton: {
-        width: '100%',
-        borderRadius: 8,
-        borderWidth: 2,
-        borderColor: '#EDF0F2',
-        backgroundColor: '#F2F5F7',
-    },
-    footerNote: {
-        color: '#6B7280',
-        fontSize: 12,
+    switchText: {
+        color: palette.muted,
+        fontSize: rem(0.875),
         fontFamily: 'Poppins_400Regular',
-        textAlign: 'center',
     },
-    // Paper's default button label is 14px; +0.2rem (3.2px), same as the add/edit forms.
-    buttonLabel: {
-        fontSize: 17.2,
-        lineHeight: 24,
+    switchLabel: {
+        fontSize: rem(0.875),
+        fontFamily: 'Poppins_600SemiBold',
     },
-});
+}));

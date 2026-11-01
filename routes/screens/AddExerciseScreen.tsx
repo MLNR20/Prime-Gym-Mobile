@@ -3,6 +3,7 @@ import ExerciseForm, { type ExerciseFormValues } from '../../components/Exercise
 import DetailsNavbar from '../../components/DetailsNavbar';
 import type { Exercise } from '../../models/Exercise';
 import type { Program } from '../../models/Program';
+import { palette, themedStyles } from '../../utils/theme';
 
 type AddExerciseScreenProps = {
     editingExercise: Exercise | null;
@@ -22,13 +23,13 @@ export default function AddExerciseScreen({ editingExercise, programs, onSubmit,
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         paddingHorizontal: 32,
         paddingVertical: 24,
     },
-});
+}));

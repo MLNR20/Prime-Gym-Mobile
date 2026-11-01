@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
+import { detailsTypography } from './detailsTypography';
+import { palette, themedStyles } from '../utils/theme';
 
 type DetailsHeaderProps = {
     title: string;
@@ -18,7 +20,7 @@ export default function DetailsHeader({ title, subtitle, onDelete, deleteLabel, 
         <View style={styles.header}>
             <View style={styles.nameRow}>
                 <Text style={styles.title}>{title}</Text>
-                <IconButton icon="trash-can-outline" iconColor="#DC2626" size={22} onPress={onDelete} style={styles.iconAction} accessibilityLabel={deleteLabel} />
+                <IconButton icon="trash-can-outline" iconColor={palette.danger} size={22} onPress={onDelete} style={styles.iconAction} accessibilityLabel={deleteLabel} />
             </View>
             {!!subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
             {children}
@@ -26,7 +28,7 @@ export default function DetailsHeader({ title, subtitle, onDelete, deleteLabel, 
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     header: {
         width: '100%',
         gap: 8,
@@ -38,15 +40,14 @@ const styles = StyleSheet.create({
     },
     title: {
         flex: 1,
-        color: '#000000',
-        fontSize: 21.6, // 1.35rem
-        fontFamily: 'Poppins_700Bold',
+        color: palette.text,
+        ...detailsTypography.title,
     },
     subtitle: {
-        color: '#5a3f00',
-        fontFamily: 'Poppins_400Regular',
+        color: palette.brown,
+        ...detailsTypography.subtitle,
     },
     iconAction: {
         margin: 0,
     },
-});
+}));

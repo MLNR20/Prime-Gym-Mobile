@@ -11,6 +11,7 @@ import { formatPeso } from '../../utils/currency';
 import { formatDateOnly } from '../../utils/dateTime';
 import { summarizeFinance } from '../../utils/finance';
 import { useSubscribersViewModel } from '../../viewmodels/useSubscribersViewModel';
+import { palette, themedStyles } from '../../utils/theme';
 
 type FinanceScreenProps = {
     onBack: () => void;
@@ -79,10 +80,10 @@ export default function FinanceScreen({ onBack }: FinanceScreenProps) {
     );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: palette.background,
     },
     content: {
         paddingHorizontal: 32,
@@ -97,14 +98,14 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         marginTop: 12,
-        color: '#000000',
+        color: palette.text,
         fontSize: 16,
         fontFamily: 'Poppins_700Bold',
     },
     table: {
-        backgroundColor: '#F2F5F7',
+        backgroundColor: palette.surface,
         borderWidth: 2,
-        borderColor: '#EDF0F2',
+        borderColor: palette.border,
         borderRadius: 12,
         paddingHorizontal: 16,
     },
@@ -112,23 +113,23 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     itemTitle: {
-        color: '#000000',
+        color: palette.text,
         fontFamily: 'Poppins_600SemiBold',
     },
     itemDescription: {
-        color: '#6B7280',
+        color: palette.muted,
         fontFamily: 'Poppins_400Regular',
     },
     amount: {
         alignSelf: 'center',
-        color: '#000000',
+        color: palette.text,
         fontFamily: 'Poppins_600SemiBold',
     },
     message: {
-        color: '#5C4300',
+        color: palette.brown,
         fontFamily: 'Poppins_400Regular',
     },
     spinner: {
         paddingVertical: 12,
     },
-});
+}));

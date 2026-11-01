@@ -8,6 +8,7 @@ import type { ContactFormValues } from "../../components/ContactForm";
 import ContactListCard from "../../components/ContactListCard";
 import type { Contact } from "../../models/Contact";
 import { useContactsViewModel } from "../../viewmodels/useContactsViewModel";
+import { palette, themedStyles } from '../../utils/theme';
 
 type ContactsScreenProps = {
   onBack: () => void;
@@ -87,7 +88,7 @@ export default function ContactsScreen({ onBack }: ContactsScreenProps) {
             showSearchBar={false}
             onItemPress={(contact) => setViewingContact(contact)}
             renderRight={() => (
-              <IconButton icon="chevron-right" size={22} iconColor="#C4C7CC" style={styles.chevron} />
+              <IconButton icon="chevron-right" size={22} iconColor={palette.iconMuted} style={styles.chevron} />
             )}
           />
         </View>
@@ -96,10 +97,10 @@ export default function ContactsScreen({ onBack }: ContactsScreenProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themedStyles(() => StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: palette.background,
   },
   content: {
     flex: 1,
@@ -114,4 +115,4 @@ const styles = StyleSheet.create({
   chevron: {
     margin: 0,
   },
-});
+}));
