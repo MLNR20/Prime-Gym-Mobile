@@ -7,7 +7,8 @@ import { palette, themedStyles } from '../utils/theme';
 type SearchNavbarProps = {
     title: string;
     onBack?: () => void;
-    onAddPress: () => void;
+    // Omit for a search-only navbar with no action button on the right.
+    onAddPress?: () => void;
     // Icon of the action button on the right; the + button by default.
     rightIcon?: string;
     searchPlaceholder: string;
@@ -29,7 +30,7 @@ export default function SearchNavbar({
         <DetailsNavbar
             title={title}
             onBack={onBack}
-            rightIcon={rightIcon}
+            rightIcon={onAddPress ? rightIcon : undefined}
             onRightPress={onAddPress}
         >
             <Searchbar

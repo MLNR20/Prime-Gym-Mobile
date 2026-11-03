@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import DashboardScreen from './screens/DashboardScreen';
+import { useCloudSync } from '../viewmodels/useCloudSync';
 import { useExpiredSubscriptionNotifier } from '../viewmodels/useExpiredSubscriptionNotifier';
 import { useUnreadNotificationCount } from '../viewmodels/useNotificationsViewModel';
 import InboxScreen from './screens/InboxScreen';
@@ -30,6 +31,7 @@ const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
     const unreadCount = useUnreadNotificationCount();
+    useCloudSync();
     useExpiredSubscriptionNotifier();
 
     return (

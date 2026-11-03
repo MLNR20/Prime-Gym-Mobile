@@ -4,13 +4,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { Switch } from 'react-native-paper';
 import { dashboardScreenStyles, surfaceBorder } from '../../components/commonStyles';
 import { rem } from '../../utils/rem';
+import { requestDeviceAlertPermission } from '../../utils/deviceAlerts';
+import { useNotificationSettings } from '../../utils/notificationSettings';
 import { usePlanNames } from '../../viewmodels/usePlansViewModel';
 import ExportDataScreen from './ExportDataScreen';
 import GymProfileScreen from './GymProfileScreen';
 import PlansScreen from './PlansScreen';
 import { palette, themedStyles, useAppTheme } from '../../utils/theme';
 
-// Only the Dark Mode toggle is wired up; the others hold local state for now. Gym Profile, Membership Plans and Export Data open real screens.
+// The three Notifications toggles and Dark Mode are wired up and saved; Cloud Backup holds local state for now. Gym Profile, Membership Plans and Export Data open real screens.
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -59,9 +61,8 @@ const Value = ({ children }: { children: string }) => <Text style={styles.value}
 export default function SettingsScreen() {
     const [view, setView] = useState<'settings' | 'gym' | 'plans' | 'export'>('settings');
     const planNames = usePlanNames();
-    const [pushAlerts, setPushAlerts] = useState(true);
-    const [expiryAlerts, setExpiryAlerts] = useState(true);
-    const [dailySummary, setDailySummary] = useState(false);
+    const { settings, update } = useNotificationSettings();
+    const [pushDenied, setPushDenied] = useState(false);
     const [cloudBackup, setCloudBackup] = useState(true);
     // Dark mode is the one toggle that is real: it is saved and restyles the whole app.
     const { isDark, setScheme } = useAppTheme();
@@ -69,6 +70,16 @@ export default function SettingsScreen() {
     const toggle = (value: boolean, onValueChange: (next: boolean) => void) => (
         <Switch value={value} onValueChange={onValueChange} color="#F59E0B" />
     );
+
+    // Turning push on asks the device for permission first; if it is refused the switch stays off.
+    const setPush = async (next: boolean) => {
+        if (next && !(await requestDeviceAlertPermission())) {
+            setPushDenied(true);
+            return;
+        }
+        setPushDenied(false);
+        await update({ push: next });
+    };
 
     const showSettings = () => setView('settings');
     if (view === 'gym') return <GymProfileScreen onBack={showSettings} />;
@@ -80,9 +91,9 @@ export default function SettingsScreen() {
             <Text style={styles.title}>Settings</Text>
 
             <Section title="Notifications">
-                <SettingsRow icon="notifications-outline" label="Push Notifications" description="Alerts on this device" trailing={toggle(pushAlerts, setPushAlerts)} />
-                <SettingsRow icon="time-outline" label="Expiring Subscriptions" description="Remind 7 days before" trailing={toggle(expiryAlerts, setExpiryAlerts)} />
-                <SettingsRow icon="mail-open-outline" label="Daily Summary" description="Check-ins and earnings" trailing={toggle(dailySummary, setDailySummary)} isLast />
+                <SettingsRow icon="notifications-outline" label="Push Notifications" description={pushDenied ? 'Allow notifications in device settings' : 'Alerts on this device'} trailing={toggle(settings.push, setPush)} />
+                <SettingsRow icon="time-outline" label="Expiring Subscriptions" description="Remind 7 days before" trailing={toggle(settings.expiry, (next) => update({ expiry: next }))} />
+                <SettingsRow icon="mail-open-outline" label="Daily Summary" description="Check-ins and earnings" trailing={toggle(settings.daily, (next) => update({ daily: next }))} isLast />
             </Section>
 
             <Section title="Gym">

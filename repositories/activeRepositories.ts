@@ -8,42 +8,72 @@ import type { Member, NewMember } from '../models/Member';
 import type { NewNotification, Notification } from '../models/Notification';
 import type { NewPlan, Plan } from '../models/Plan';
 import type { NewProgram, Program } from '../models/Program';
-import { mirroredAttendanceRepository } from './MirroredAttendanceRepository';
-import { mirroredAuditLogRepository } from './MirroredAuditLogRepository';
-import { mirroredContactRepository } from './MirroredContactRepository';
-import { mirroredExerciseRepository } from './MirroredExerciseRepository';
-import { mirroredLockerKeyRepository } from './MirroredLockerKeyRepository';
-import { mirroredMemberRepository } from './MirroredMemberRepository';
-import { mirroredProgramRepository } from './MirroredProgramRepository';
+import { FirestoreCollection } from './FirestoreCollection';
 import type { Repository } from './Repository';
+import { sqliteAttendanceRepository } from './SqliteAttendanceRepository';
+import { sqliteAuditLogRepository } from './SqliteAuditLogRepository';
+import { sqliteContactRepository } from './SqliteContactRepository';
 import { sqliteEquipmentRepository } from './SqliteEquipmentRepository';
+import { sqliteExerciseRepository } from './SqliteExerciseRepository';
+import { sqliteLockerKeyRepository } from './SqliteLockerKeyRepository';
+import { sqliteMemberRepository } from './SqliteMemberRepository';
 import { sqliteNotificationRepository } from './SqliteNotificationRepository';
 import { sqlitePlanRepository } from './SqlitePlanRepository';
+import { sqliteProgramRepository } from './SqliteProgramRepository';
+import { SyncedRepository } from './SyncedRepository';
 
-// SQLite is the source of truth; new members are also mirrored to Firestore for a cloud backup
-// (see MirroredMemberRepository). ViewModels depend on the Repository<T> interface only, so
-// swapping to a fully Firestore-backed repository later needs no other changes.
-export const memberRepository: Repository<Member, NewMember> = mirroredMemberRepository;
+// SQLite on each phone is what the screens read. Tables listed as synced below are also kept in step with
+// Firestore in both directions (see SyncedRepository), so every phone signed in to the gym sees the same data.
+// ViewModels depend on the Repository<T> interface only, so none of them know about the sync.
+export const memberRepository: Repository<Member, NewMember> = new SyncedRepository(
+    sqliteMemberRepository,
+    new FirestoreCollection<Member>('members'),
+    'members'
+);
 
-// Equipment is local-only (no Firestore backup) for now.
-export const equipmentRepository: Repository<Equipment, NewEquipment> = sqliteEquipmentRepository;
+export const equipmentRepository: Repository<Equipment, NewEquipment> = new SyncedRepository(
+    sqliteEquipmentRepository,
+    new FirestoreCollection<Equipment>('equipment'),
+    'equipment'
+);
 
-// Notifications are local-only (no Firestore backup) for now, same as equipment.
+export const contactRepository: Repository<Contact, NewContact> = new SyncedRepository(
+    sqliteContactRepository,
+    new FirestoreCollection<Contact>('contacts'),
+    'contacts'
+);
+
+export const lockerKeyRepository: Repository<LockerKey, NewLockerKey> = new SyncedRepository(
+    sqliteLockerKeyRepository,
+    new FirestoreCollection<LockerKey>('locker_keys'),
+    'locker_keys'
+);
+
+export const attendanceRepository: Repository<AttendanceRecord, NewAttendanceRecord> = new SyncedRepository(
+    sqliteAttendanceRepository,
+    new FirestoreCollection<AttendanceRecord>('attendance_records'),
+    'attendance_records'
+);
+
+export const auditLogRepository: Repository<AuditLog, NewAuditLog> = new SyncedRepository(
+    sqliteAuditLogRepository,
+    new FirestoreCollection<AuditLog>('audit_logs'),
+    'audit_logs'
+);
+
+export const exerciseRepository: Repository<Exercise, NewExercise> = new SyncedRepository(
+    sqliteExerciseRepository,
+    new FirestoreCollection<Exercise>('exercises'),
+    'exercises'
+);
+
+export const programRepository: Repository<Program, NewProgram> = new SyncedRepository(
+    sqliteProgramRepository,
+    new FirestoreCollection<Program>('programs'),
+    'programs'
+);
+
+// Local to each phone: the inbox (every phone raises its own alerts) and membership plans (each phone seeds
+// its own default Basic/Standard/Premium, which would show up twice if they were synced).
 export const notificationRepository: Repository<Notification, NewNotification> = sqliteNotificationRepository;
-
-// Membership plans are local-only (no Firestore backup) for now, same as equipment.
 export const planRepository: Repository<Plan, NewPlan> = sqlitePlanRepository;
-
-// Contacts and locker keys are mirrored to Firestore for a cloud backup, same as members.
-export const contactRepository: Repository<Contact, NewContact> = mirroredContactRepository;
-export const lockerKeyRepository: Repository<LockerKey, NewLockerKey> = mirroredLockerKeyRepository;
-
-// Attendance records are mirrored to Firestore too, including later edits such as filling in time_out.
-export const attendanceRepository: Repository<AttendanceRecord, NewAttendanceRecord> = mirroredAttendanceRepository;
-
-// Audit logs are mirrored to Firestore for a cloud backup, same as members, contacts and locker keys.
-export const auditLogRepository: Repository<AuditLog, NewAuditLog> = mirroredAuditLogRepository;
-
-// Exercises and programs are mirrored to Firestore for a cloud backup, including updates and removals.
-export const exerciseRepository: Repository<Exercise, NewExercise> = mirroredExerciseRepository;
-export const programRepository: Repository<Program, NewProgram> = mirroredProgramRepository;

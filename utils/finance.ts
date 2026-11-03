@@ -20,6 +20,64 @@ export type FinanceSummary = {
     byPlan: PlanBreakdown[];
 };
 
+export type PaymentPeriod = 'all' | 'today' | 'week' | 'month' | 'year';
+
+export const PAYMENT_PERIODS: readonly { value: PaymentPeriod; label: string }[] = [
+    { value: 'all', label: 'All time' },
+    { value: 'today', label: 'Today' },
+    { value: 'week', label: 'Last 7 days' },
+    { value: 'month', label: 'This month' },
+    { value: 'year', label: 'This year' },
+];
+
+export type PaymentFilters = {
+    /** Matches the subscriber's name or plan, ignoring case. */
+    query: string;
+    period: PaymentPeriod;
+    /** A plan name, or '' for every plan. */
+    plan: string;
+};
+
+export const NO_PAYMENT_FILTERS: PaymentFilters = { query: '', period: 'all', plan: '' };
+
+export function hasPaymentFilters({ query, period, plan }: PaymentFilters): boolean {
+    return query.trim() !== '' || period !== 'all' || plan !== '';
+}
+
+/** First day (YYYY-MM-DD) included in a period, or '' when it has no lower bound. */
+function periodStart(period: PaymentPeriod, today: string): string {
+    switch (period) {
+        case 'today':
+            return today;
+        case 'week': {
+            const date = new Date(`${today}T00:00:00Z`);
+            date.setUTCDate(date.getUTCDate() - 6);
+            return date.toISOString().slice(0, 10);
+        }
+        case 'month':
+            return `${today.slice(0, 7)}-01`;
+        case 'year':
+            return `${today.slice(0, 4)}-01-01`;
+        default:
+            return '';
+    }
+}
+
+/** Keeps the subscribers whose latest payment matches the search text, the period and the plan. */
+export function filterPayments(members: Member[], filters: PaymentFilters): Member[] {
+    const today = nowInPhilippineTime().slice(0, 10);
+    const start = periodStart(filters.period, today);
+    const query = filters.query.trim().toLowerCase();
+
+    return members.filter((member) => {
+        const paid = member.payment_date.slice(0, 10);
+        if (start && (paid < start || paid > today)) return false;
+        if (filters.plan && member.plan !== filters.plan) return false;
+        if (!query) return true;
+        return `${member.first_name} ${member.last_name} ${member.plan}`.toLowerCase().includes(query);
+    });
+}
+
 export type SubscriberBreakdown = {
     total: number;
     byStatus: Record<MemberStatus, number>;

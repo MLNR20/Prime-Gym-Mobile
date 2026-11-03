@@ -5,8 +5,7 @@ import type { Repository } from './Repository';
 /**
  * Generic Repository<T> backed by a single SQLite table. expo-sqlite has no live-query
  * mechanism, so `subscribe` is approximated by re-running getAll() after every local write and
- * pushing the result to listeners — good enough for a single-device app, unlike Firestore's
- * true server-pushed snapshots.
+ * pushing the result to listeners (cloud sync changes go through the same listeners).
  */
 export class SqliteRepository<T extends { id: string }, TNew extends Record<string, unknown>>
     implements Repository<T, TNew>
@@ -95,22 +94,43 @@ export class SqliteRepository<T extends { id: string }, TNew extends Record<stri
         this.notifyAll();
     }
 
+    async getById(id: string): Promise<T | null> {
+        const row = await this.runExclusive((db) =>
+            db.getFirstAsync<Record<string, unknown>>(`SELECT * FROM ${this.table} WHERE id = ?`, id)
+        );
+        return row ? this.fromRow(row) : null;
+    }
+
     /**
-     * Inserts each item under its own id, skipping any id that already exists locally. Used to pull
-     * in cloud-only records (e.g. a fresh install restoring from a Firestore backup) without
-     * clobbering local edits or removals, which are never mirrored back up to Firestore.
+     * Inserts each item under its own id, replacing the row if that id already exists. Used by cloud
+     * sync to bring in records that are new or newer in the cloud; listeners hear about it once.
      */
-    async insertMissing(items: T[]): Promise<void> {
+    async upsertMany(items: T[]): Promise<void> {
         if (items.length === 0) return;
         await this.runExclusive(async (db) => {
+            // Cloud documents written by older versions may carry fields this table no longer has.
+            const known = new Set(
+                (await db.getAllAsync<{ name: string }>(`PRAGMA table_info(${this.table})`)).map((column) => column.name)
+            );
             for (const item of items) {
-                const columns = Object.keys(item).filter((column) => column !== 'id');
+                const columns = Object.keys(item).filter((column) => column !== 'id' && known.has(column));
                 const placeholders = columns.map(() => '?').join(', ');
                 await db.runAsync(
-                    `INSERT OR IGNORE INTO ${this.table} (id, ${columns.join(', ')}) VALUES (?, ${placeholders})`,
+                    `INSERT OR REPLACE INTO ${this.table} (id, ${columns.join(', ')}) VALUES (?, ${placeholders})`,
                     item.id,
                     ...columns.map((column) => this.toBindValue((item as Record<string, unknown>)[column]))
                 );
+            }
+        });
+        this.notifyAll();
+    }
+
+    /** Deletes several rows at once (cloud sync applying removals made on another device). */
+    async removeMany(ids: string[]): Promise<void> {
+        if (ids.length === 0) return;
+        await this.runExclusive(async (db) => {
+            for (const id of ids) {
+                await db.runAsync(`DELETE FROM ${this.table} WHERE id = ?`, id);
             }
         });
         this.notifyAll();
